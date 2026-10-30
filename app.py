@@ -47,77 +47,68 @@ st.markdown("""
 <style>
     /* Global Background & Root Atmosphere */
     .stApp {
-        background-color: #faf8f5 !important;
+        background-color: #f8fafc !important;
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
     
     [data-testid="stMain"] {
-        color: #1e293b !important;
-        background-color: #faf8f5 !important;
+        color: #0f172a !important;
+        background-color: #f8fafc !important;
     }
     
-    /* Editorial Typography */
+    /* Editorial Typography - High Contrast Charcoal Black */
     h1, h2, h3, .serif-font {
         font-family: 'Playfair Display', Georgia, serif !important;
         letter-spacing: -0.3px;
     }
     
-    [data-testid="stMain"] h1 {
-        color: #0d2818 !important;
-        font-weight: 850 !important;
-    }
-    [data-testid="stMain"] h2 {
-        color: #143e2b !important;
-        font-weight: 800 !important;
-    }
-    [data-testid="stMain"] h3 {
-        color: #194d35 !important;
-        font-weight: 750 !important;
-    }
+    [data-testid="stMain"] h1,
+    [data-testid="stMain"] h2,
+    [data-testid="stMain"] h3,
     [data-testid="stMain"] h4,
     [data-testid="stMain"] h5,
     [data-testid="stMain"] h6 {
-        color: #1b4332 !important;
-        font-weight: 700 !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
     }
     [data-testid="stMain"] p,
     [data-testid="stMain"] span,
     [data-testid="stMain"] li {
-        color: #2d3748 !important;
+        color: #1e293b !important;
     }
     [data-testid="stMain"] [data-testid="stCaptionContainer"] p,
     [data-testid="stMain"] .stCaption {
-        color: #526154 !important;
+        color: #475569 !important;
         font-weight: 500 !important;
     }
     
     /* Widget & Radio Labels */
     [data-testid="stRadio"] label p,
     [data-testid="stWidgetLabel"] label p {
-        color: #163829 !important;
+        color: #0f172a !important;
         font-weight: 700 !important;
         font-size: 0.95rem !important;
     }
     
     /* Tabs: Handcrafted Underline */
     .stTabs [data-baseweb="tab"] {
-        color: #4a5d4e !important;
+        color: #475569 !important;
         font-weight: 600 !important;
         font-size: 0.94rem !important;
         border-bottom: 2px solid transparent !important;
         padding: 10px 18px !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #0f3d27 !important;
+        color: #0f172a !important;
         font-weight: 800 !important;
-        border-bottom: 2.5px solid #c28422 !important;
+        border-bottom: 2.5px solid #15803d !important;
     }
     
-    /* Sidebar: Warm Botanical Linen */
+    /* Sidebar: Warm Clean Crisp Linen */
     [data-testid="stSidebar"] {
         background-color: #ffffff !important;
-        border-right: 1.5px solid #e8e2d8 !important;
-        box-shadow: 2px 0 12px rgba(26, 46, 34, 0.04) !important;
+        border-right: 1.5px solid #e2e8f0 !important;
+        box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04) !important;
     }
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
@@ -125,28 +116,28 @@ st.markdown("""
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] label {
-        color: #183526 !important;
+        color: #0f172a !important;
     }
     
-    /* Primary Action Buttons: Deep Forest Green with Gold Glow */
+    /* Primary Action Buttons */
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #123e2b 0%, #1e583f 100%) !important;
+        background: linear-gradient(135deg, #15803d 0%, #166534 100%) !important;
         color: #ffffff !important;
-        border: 1px solid #d4af37 !important;
+        border: 1px solid #15803d !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 14px rgba(18, 62, 43, 0.25) !important;
+        box-shadow: 0 4px 12px rgba(21, 128, 61, 0.22) !important;
         transition: all 0.25s ease !important;
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-1.5px) !important;
-        box-shadow: 0 6px 18px rgba(18, 62, 43, 0.35) !important;
-        border-color: #f6c85f !important;
+        box-shadow: 0 6px 18px rgba(21, 128, 61, 0.35) !important;
+        background: #14532d !important;
     }
     
     /* Artisanal Header Banner */
     .artisan-header {
-        background: radial-gradient(circle at 12% 18%, #17422f 0%, #0d2a1d 60%, #071911 100%);
+        background: radial-gradient(circle at 12% 18%, #143e2b 0%, #0d2818 60%, #06180f 100%);
         color: #ffffff;
         padding: 26px 32px;
         border-radius: 16px;
@@ -169,18 +160,18 @@ st.markdown("""
         font-weight: 850;
         margin: 0;
         letter-spacing: -0.5px;
-        color: #fdfaf2 !important;
+        color: #ffffff !important;
         text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     .artisan-subtitle {
         font-size: 1.02rem;
-        color: #d1fae5 !important;
+        color: #f1f5f9 !important;
         margin-top: 5px;
-        font-weight: 400;
+        font-weight: 450;
         letter-spacing: 0.2px;
     }
     
-    /* Artisanal Badges */
+    /* Artisanal Badges - High Contrast Text */
     .artisan-meta {
         margin-top: 14px;
         display: flex;
@@ -204,41 +195,41 @@ st.markdown("""
         border: 1px solid #d97706;
     }
     .badge-emerald {
-        background: rgba(52, 211, 153, 0.2);
-        color: #6ee7b7 !important;
-        border: 1px solid rgba(52, 211, 153, 0.45);
+        background: #047857;
+        color: #ffffff !important;
+        border: 1px solid #34d399;
     }
     .badge-parchment {
-        background: rgba(255, 255, 255, 0.18);
-        color: #fefce8 !important;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.22);
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.45);
     }
     
     /* Apothecary Product SKU Card */
     .apothecary-sku {
         background: #ffffff;
-        border: 1.5px solid #e7ded3;
+        border: 1.5px solid #e2e8f0;
         border-radius: 12px;
         padding: 16px 20px;
         margin-bottom: 14px;
         transition: all 0.25s ease;
-        box-shadow: 0 2px 8px rgba(35, 50, 40, 0.04);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
         position: relative;
     }
     .apothecary-sku:hover {
-        border-color: #2d6a4f;
-        box-shadow: 0 6px 18px rgba(45, 106, 79, 0.12);
+        border-color: #15803d;
+        box-shadow: 0 6px 18px rgba(21, 128, 61, 0.12);
         transform: translateY(-1px);
     }
     
     /* Apothecary Vintage Prescription Memo Card */
     .apothecary-receipt {
-        background: #fffdfa;
-        border: 2px dashed #c9baa4;
+        background: #ffffff;
+        border: 2px dashed #cbd5e1;
         border-radius: 14px;
         padding: 30px 34px;
         margin: 18px 0;
-        box-shadow: 0 8px 24px rgba(70, 55, 40, 0.08);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
         font-family: 'Playfair Display', Georgia, serif;
         position: relative;
     }
@@ -248,10 +239,10 @@ st.markdown("""
         text-align: center;
         font-size: 0.76rem;
         letter-spacing: 3px;
-        color: #8c7355;
+        color: #0f172a;
         font-weight: 700;
         margin-bottom: 12px;
-        border-bottom: 1px solid #e8dfd2;
+        border-bottom: 1px solid #e2e8f0;
         padding-bottom: 8px;
     }
     .receipt-watermark {
@@ -272,47 +263,49 @@ st.markdown("""
     /* Museum Specimen Slide Mount for XAI */
     .specimen-mount {
         background: #ffffff;
-        border: 2px solid #dfd7cc;
+        border: 2px solid #e2e8f0;
         border-radius: 12px;
         padding: 16px;
-        box-shadow: 0 4px 14px rgba(30, 45, 35, 0.06);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
         text-align: center;
         position: relative;
     }
     .specimen-tag {
-        background: #f4ede2;
-        border: 1px solid #c9bdae;
-        color: #5c4731;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
+        padding: 4px 10px;
         border-radius: 4px;
         display: inline-block;
         margin-top: 8px;
     }
     
-    /* Atmospheric Action Steps */
+    /* High Contrast Action Steps */
     .action-step-artisan {
-        background: #f2f7f3;
-        border-left: 4px solid #1e5e3f;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4.5px solid #15803d;
         padding: 12px 18px;
         border-radius: 0 8px 8px 0;
         margin-bottom: 10px;
         font-size: 0.95rem;
-        color: #123824 !important;
+        color: #0f172a !important;
         font-weight: 500;
     }
     
-    /* Gilded Pill Tag */
+    /* Crisp Info Pill Tag */
     .artisan-pill {
-        background: #f4eee3;
-        border: 1px solid #d5c8b5;
-        padding: 5px 12px;
+        background: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        padding: 6px 14px;
         border-radius: 20px;
-        font-size: 0.82rem;
-        color: #382c1e !important;
+        font-size: 0.84rem;
+        color: #0f172a !important;
         font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -380,15 +373,15 @@ if st.session_state["current_image"] is None:
 with st.sidebar:
     # Handcrafted Atelier Seal Logo
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ebdccb;">
-        <div style="background: linear-gradient(135deg, #133926, #092318); width: 50px; height: 50px; border-radius: 12px; border: 1.5px solid #d4af37; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(9,35,24,0.3);">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fef08a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+        <div style="background: #15803d; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(21,128,61,0.25);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
         </div>
         <div>
-            <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 850; color: #0d2818; line-height: 1.1;">CropCare Pro</div>
-            <div style="font-size: 0.70rem; color: #a16207; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Botanical Retail POS</div>
+            <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 850; color: #0f172a; line-height: 1.1;">CropCare Pro</div>
+            <div style="font-size: 0.70rem; color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Botanical Retail POS</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -429,26 +422,26 @@ with st.sidebar:
     # Current Active Plan Badge (Artisanal Finishes)
     tier_info = MONETIZATION_TIERS[st.session_state["current_tier"]]
     st.markdown(f"""
-    <div style='background: #fffdf8; border: 1.5px solid #d4af37; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(180, 130, 50, 0.08);'>
+    <div style='background: #ffffff; border: 1.5px solid #d4af37; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);'>
         <div style='display: flex; justify-content: space-between; align-items: center;'>
             <span style='font-size: 0.72rem; font-weight: 800; color: #854d0e; letter-spacing: 0.5px;'>RETAIL TIER</span>
-            <span style='background: {tier_info["color"]}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.68rem; font-weight: 750;'>{tier_info["name"].split()[0]}</span>
+            <span style='background: {tier_info["color"]}; color: #ffffff; padding: 3px 8px; border-radius: 12px; font-size: 0.68rem; font-weight: 750;'>{tier_info["name"].split()[0]}</span>
         </div>
-        <div style='font-family: \"Playfair Display\", serif; font-size: 1.05rem; font-weight: 850; color: #1e3a2b; margin-top: 4px;'>{tier_info["name"]}</div>
-        <div style='font-size: 0.78rem; color: #a16207; font-weight: 600;'>{tier_info["billing_period"]}</div>
-        <div style='font-size: 0.74rem; color: #64748b; margin-top: 6px; border-top: 1px dashed #e5d7c3; padding-top: 4px;'>
-            Counter Scans: <strong>{st.session_state["scans_used_this_month"]}</strong> / {"Unlimited" if tier_info["scan_limit_monthly"] > 1000 else tier_info["scan_limit_monthly"]}
+        <div style='font-family: \"Playfair Display\", serif; font-size: 1.05rem; font-weight: 850; color: #0f172a; margin-top: 5px;'>{tier_info["name"]}</div>
+        <div style='font-size: 0.80rem; color: #b45309; font-weight: 700;'>{tier_info["billing_period"]}</div>
+        <div style='font-size: 0.76rem; color: #475569; margin-top: 6px; border-top: 1px dashed #e2e8f0; padding-top: 6px;'>
+            Counter Scans: <strong style='color: #0f172a;'>{st.session_state["scans_used_this_month"]}</strong> / {"Unlimited" if tier_info["scan_limit_monthly"] > 1000 else tier_info["scan_limit_monthly"]}
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Offline Edge Engine Status
     st.markdown(f"""
-    <div style='background: #f2f8f4; border: 1px solid #a3cfb5; border-radius: 8px; padding: 11px;'>
-        <div style='font-size: 0.78rem; font-weight: 800; color: #134e2f; letter-spacing: 0.3px;'>
+    <div style='background: #ffffff; border: 1.5px solid #e2e8f0; border-left: 4.5px solid #15803d; border-radius: 8px; padding: 12px 14px;'>
+        <div style='font-size: 0.80rem; font-weight: 800; color: #0f172a; letter-spacing: 0.3px;'>
             {T["edge_engine_active"]}
         </div>
-        <div style='font-size: 0.74rem; color: #195e3a; margin-top: 4px; line-height: 1.4;'>
+        <div style='font-size: 0.76rem; color: #334155; margin-top: 4px; line-height: 1.45;'>
             {T["edge_engine_desc"]}
         </div>
     </div>
@@ -562,8 +555,7 @@ if nav_mode_index == 0:
             # Quality assessment badge
             if st.session_state["inference_result"]:
                 q_info = st.session_state["inference_result"]["quality_info"]
-                q_color = "#15803d" if q_info["is_acceptable"] else "#b45309"
-                q_bg = "#f0fdf4" if q_info["is_acceptable"] else "#fffbeb"
+                q_badge_color = "#15803d" if q_info["is_acceptable"] else "#b45309"
                 q_border = "#86efac" if q_info["is_acceptable"] else "#fde68a"
                 
                 if q_info["quality_status"] == "Good":
@@ -576,13 +568,13 @@ if nav_mode_index == 0:
                     q_status_trans = T["quality_glare"]
                     
                 st.markdown(f"""
-                <div style='background: {q_bg}; border: 1px solid {q_border}; border-radius: 8px; padding: 10px 14px; margin-top: 8px;'>
-                    <div style='display: flex; justify-content: space-between;'>
+                <div style='background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-top: 8px;'>
+                    <div style='display: flex; justify-content: space-between; align-items: center;'>
                         <span style='font-size: 0.85rem; font-weight: 700; color: #0f172a;'>{T["cv_quality_title"]}</span>
-                        <span style='color: {q_color}; font-weight: 800; font-size: 0.85rem;'>{q_status_trans}</span>
+                        <span style='color: #ffffff; background: {q_badge_color}; font-weight: 800; font-size: 0.76rem; padding: 3px 8px; border-radius: 4px;'>{q_status_trans}</span>
                     </div>
-                    <div style='font-size: 0.78rem; color: #475569; margin-top: 4px;'>
-                        {T["cv_sharpness"]} <strong>{q_info["laplacian_var"]:.1f}</strong> | {T["cv_brightness"]} <strong>{q_info["mean_brightness"]:.1f}</strong>
+                    <div style='font-size: 0.78rem; color: #475569; margin-top: 6px;'>
+                        {T["cv_sharpness"]} <strong style='color: #0f172a;'>{q_info["laplacian_var"]:.1f}</strong> | {T["cv_brightness"]} <strong style='color: #0f172a;'>{q_info["mean_brightness"]:.1f}</strong>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -613,23 +605,23 @@ if nav_mode_index == 0:
             st.markdown(f"### **{T['step2_title']}**")
             
             diag_html = f"""
-            <div style="background: #ffffff; border-radius: 14px; border: 2.5px solid {res['severity_color']}; border-top: 6px solid {res['severity_color']}; padding: 20px 24px; box-shadow: 0 6px 18px rgba(35, 50, 40, 0.07); margin-bottom: 16px;">
+            <div style="background: #ffffff; border-radius: 14px; border: 2px solid #cbd5e1; border-top: 6px solid {res['severity_color']}; padding: 20px 24px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06); margin-bottom: 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline;">
                     <div>
-                        <span style="font-size: 0.76rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 800;">{T["detected_condition"]}</span>
-                        <h2 style="margin: 3px 0 0 0; color: #0d2818 !important; font-family: 'Playfair Display', Georgia, serif; font-size: 2.0rem; font-weight: 850;">{trans['label']}</h2>
-                        <div style="color: #4b5563 !important; font-size: 0.95rem; margin-top: 3px; font-style: italic; font-weight: 500;">{top_info['pathogen']}</div>
+                        <span style="font-size: 0.76rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; font-weight: 800;">{T["detected_condition"]}</span>
+                        <h2 style="margin: 3px 0 0 0; color: #0f172a !important; font-family: 'Playfair Display', Georgia, serif; font-size: 2.0rem; font-weight: 850;">{trans['label']}</h2>
+                        <div style="color: #475569 !important; font-size: 0.95rem; margin-top: 3px; font-style: italic; font-weight: 500;">{top_info['pathogen']}</div>
                     </div>
                     <div style="text-align: right;">
                         <div style="font-size: 2.3rem; font-weight: 850; color: {res['severity_color']}; line-height: 1.1;">{res['top_confidence_pct']}%</div>
                         <div style="font-size: 0.68rem; color: #64748b; font-weight: 750; letter-spacing: 0.8px;">{T["confidence_score"]}</div>
                     </div>
                 </div>
-                <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #ebdccb; display: flex; flex-wrap: wrap; gap: 10px;">
-                    <span class="artisan-pill">{T["crop_label"]} <strong>{top_info['crop']}</strong></span>
+                <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span class="artisan-pill">{T["crop_label"]} <strong style="color: #0f172a;">{top_info['crop']}</strong></span>
                     <span class="artisan-pill">{T["severity_label"]} <strong style="color: {res['severity_color']};">{sev_label}</strong></span>
-                    <span class="artisan-pill">{T["lesion_area_label"]} <strong>{res['lesion_coverage_pct']}%</strong></span>
-                    <span class="artisan-pill">{T["inference_latency_label"]} <strong>{res['inference_time_ms']} ms</strong></span>
+                    <span class="artisan-pill">{T["lesion_area_label"]} <strong style="color: #0f172a;">{res['lesion_coverage_pct']}%</strong></span>
+                    <span class="artisan-pill">{T["inference_latency_label"]} <strong style="color: #0f172a;">{res['inference_time_ms']} ms</strong></span>
                 </div>
             </div>
             """
@@ -671,24 +663,24 @@ if nav_mode_index == 0:
                 for idx, sku in enumerate(stock_items):
                     p_badge = "🌟 MASTER BIO-FORMULA" if sku.get("is_primary") else "ALTERNATIVE / SECONDARY"
                     p_badge_bg = "#fef3c7" if sku.get("is_primary") else "#f1f5f9"
-                    p_badge_color = "#92400e" if sku.get("is_primary") else "#475569"
+                    p_badge_color = "#92400e" if sku.get("is_primary") else "#334155"
                     
                     st.markdown(f"""
                     <div class="apothecary-sku">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
                                 <span style="background: {p_badge_bg}; color: {p_badge_color}; font-size: 0.70rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">{p_badge}</span>
-                                <h4 style="margin: 6px 0 2px 0; color: #0d2818; font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem;">{sku['name']}</h4>
-                                <div style="font-size: 0.82rem; color: #475569;">Brand: <strong>{sku['brand']}</strong> | Pack: <strong>{sku['pack_size']}</strong> | Class: <strong>{sku['category']}</strong></div>
+                                <h4 style="margin: 6px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem;">{sku['name']}</h4>
+                                <div style="font-size: 0.82rem; color: #475569;">Brand: <strong style="color: #0f172a;">{sku['brand']}</strong> | Pack: <strong style="color: #0f172a;">{sku['pack_size']}</strong> | Class: <strong style="color: #0f172a;">{sku['category']}</strong></div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-size: 1.4rem; font-weight: 850; color: #0d2818;">₹ {sku['mrp']}</div>
-                                <div style="font-size: 0.76rem; color: #15803d; font-weight: 750;">Margin: {sku['margin_pct']}% (₹{sku['mrp'] - sku['dealer_price']})</div>
+                                <div style="font-size: 1.4rem; font-weight: 850; color: #0f172a;">₹ {sku['mrp']}</div>
+                                <div style="font-size: 0.76rem; font-weight: 750; color: #0f172a; margin-top: 3px;"><span style="background: #f1f5f9; color: #0f172a; padding: 3px 7px; border-radius: 4px; border: 1px solid #cbd5e1;">Margin: <strong style="color: #15803d;">{sku['margin_pct']}%</strong> (₹{sku['mrp'] - sku['dealer_price']})</span></div>
                             </div>
                         </div>
-                        <div style="margin-top: 10px; font-size: 0.86rem; color: #2d3748; background: #faf7f2; border: 1px solid #eae2d6; padding: 10px 14px; border-radius: 6px;">
-                            <strong>{T['dosage_label']}</strong> {sku['dosage']}<br>
-                            <span style="font-size: 0.80rem; color: #526154;">{sku['usage_notes']}</span>
+                        <div style="margin-top: 10px; font-size: 0.86rem; color: #1e293b; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 6px;">
+                            <strong style="color: #0f172a;">{T['dosage_label']}</strong> {sku['dosage']}<br>
+                            <span style="font-size: 0.80rem; color: #475569;">{sku['usage_notes']}</span>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -713,10 +705,10 @@ if nav_mode_index == 0:
                 if st.session_state["cart_items"]:
                     total_cart_val = sum(item["price"] for item in st.session_state["cart_items"])
                     st.markdown(f"""
-                    <div style='background: #fffdf9; border: 2px solid #d4af37; border-radius: 10px; padding: 14px 18px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(212,175,55,0.15);'>
+                    <div style='background: #ffffff; border: 2px solid #d4af37; border-radius: 10px; padding: 14px 18px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(212,175,55,0.15);'>
                         <div>
                             <span style='font-size: 0.82rem; font-weight: 800; color: #92400e; text-transform: uppercase;'>ORDER TOTAL ({len(st.session_state['cart_items'])} ITEMS PRESCRIBED)</span>
-                            <div style='font-family: \"Playfair Display\", serif; font-size: 1.4rem; font-weight: 850; color: #0d2818;'>Total Bill: ₹ {total_cart_val}</div>
+                            <div style='font-family: \"Playfair Display\", serif; font-size: 1.4rem; font-weight: 850; color: #0f172a;'>Total Bill: ₹ {total_cart_val}</div>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -835,18 +827,18 @@ elif nav_mode_index == 1:
     <div class="apothecary-receipt">
         <div class="receipt-watermark">AUTHENTICATED</div>
         <div style="text-align: center; margin-bottom: 16px;">
-            <h2 style="margin: 0; color: #0d2818; font-size: 1.8rem;">{st.session_state['shop_name']}</h2>
-            <div style="font-size: 0.82rem; color: #78350f; font-family: sans-serif; letter-spacing: 0.5px;">GSTIN/Lic: {st.session_state['shop_gst']} • Tel: {st.session_state['shop_phone']}</div>
-            <div style="font-size: 0.78rem; color: #64748b; margin-top: 4px; font-family: sans-serif;">Receipt: POS-CK-{int(time.time())} • Date: {time.strftime('%d %B %Y, %H:%M')}</div>
+            <h2 style="margin: 0; color: #0f172a; font-size: 1.8rem;">{st.session_state['shop_name']}</h2>
+            <div style="font-size: 0.82rem; color: #854d0e; font-family: sans-serif; letter-spacing: 0.5px;">GSTIN/Lic: {st.session_state['shop_gst']} • Tel: {st.session_state['shop_phone']}</div>
+            <div style="font-size: 0.78rem; color: #475569; margin-top: 4px; font-family: sans-serif;">Receipt: POS-CK-{int(time.time())} • Date: {time.strftime('%d %B %Y, %H:%M')}</div>
         </div>
         
-        <div style="background: #faf6ef; border: 1px solid #e2d7c5; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: sans-serif; font-size: 0.85rem; display: flex; justify-content: space-between;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: sans-serif; font-size: 0.85rem; display: flex; justify-content: space-between;">
             <div>
-                <div>Customer: <strong>{st.session_state['farmer_name']}</strong></div>
-                <div>Location: <strong>{st.session_state['farmer_village']}</strong></div>
+                <div>Customer: <strong style='color: #0f172a;'>{st.session_state['farmer_name']}</strong></div>
+                <div>Location: <strong style='color: #0f172a;'>{st.session_state['farmer_village']}</strong></div>
             </div>
             <div style="text-align: right;">
-                <div>Tested Crop: <strong>{crop_name}</strong></div>
+                <div>Tested Crop: <strong style='color: #0f172a;'>{crop_name}</strong></div>
                 <div>Diagnosis: <strong style="color: #b91c1c;">{diag_name}</strong></div>
             </div>
         </div>
@@ -863,11 +855,11 @@ elif nav_mode_index == 1:
             </tbody>
         </table>
         
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0d2818; padding-top: 12px; margin-top: 8px;">
-            <div style="font-size: 0.85rem; color: #526154; font-family: sans-serif;">Knapsack spray volume: 15L • Safe organic treatment</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0f172a; padding-top: 12px; margin-top: 8px;">
+            <div style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">Knapsack spray volume: 15L • Safe organic treatment</div>
             <div style="text-align: right;">
-                <span style="font-size: 0.85rem; color: #64748b; font-family: sans-serif;">TOTAL CASH DUE:</span>
-                <span style="font-size: 1.6rem; font-weight: 900; color: #0d2818; margin-left: 8px;">₹ {total_invoice_amt}</span>
+                <span style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">TOTAL CASH DUE:</span>
+                <span style="font-size: 1.6rem; font-weight: 900; color: #0f172a; margin-left: 8px;">₹ {total_invoice_amt}</span>
             </div>
         </div>
     </div>
@@ -956,21 +948,21 @@ elif nav_mode_index == 2:
     with tier_col1:
         t1 = MONETIZATION_TIERS["starter"]
         is_cur1 = (st.session_state["current_tier"] == "starter")
-        border1 = "3px solid #64748b" if is_cur1 else "1.5px solid #d5c8b5"
+        border1 = "3px solid #0f172a" if is_cur1 else "1.5px solid #cbd5e1"
         st.markdown(f"""
-        <div style="background: #ffffff; border: {border1}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(40,50,45,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="background: #ffffff; border: {border1}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <span style="background: #f1f5f9; color: #475569; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t1['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t1['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ forever</span></div>
-                <p style="font-size: 0.85rem; color: #475569;">{t1['description']}</p>
-                <div style="border-top: 1px solid #ebdccb; margin: 14px 0; padding-top: 12px;">
+                <span style="background: #f1f5f9; color: #334155; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t1['badge']}</span>
+                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t1['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ forever</span></div>
+                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t1['description']}</p>
+                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
                     <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #334155; padding-left: 18px; margin-top: 6px;">
+                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
                         {''.join(['<li>' + f + '</li>' for f in t1['features']])}
                     </ul>
-                    <strong style="font-size: 0.82rem; color: #94a3b8;">{T['locked_features']}</strong>
-                    <ul style="font-size: 0.78rem; color: #94a3b8; padding-left: 18px; margin-top: 4px;">
+                    <strong style="font-size: 0.82rem; color: #64748b;">{T['locked_features']}</strong>
+                    <ul style="font-size: 0.78rem; color: #64748b; padding-left: 18px; margin-top: 4px; line-height: 1.5;">
                         {''.join(['<li>🔒 ' + f + '</li>' for f in t1['locked_features']])}
                     </ul>
                 </div>
@@ -981,22 +973,22 @@ elif nav_mode_index == 2:
             st.session_state["current_tier"] = "starter"
             st.rerun()
 
-    # Tier 2: Pro (Gilded Emerald Velvet Finishes)
+    # Tier 2: Pro (High Contrast Clean Finish)
     with tier_col2:
         t2 = MONETIZATION_TIERS["pro"]
         is_cur2 = (st.session_state["current_tier"] == "pro")
-        border2 = "3px solid #16a34a" if is_cur2 else "2px solid #22c55e"
+        border2 = "3px solid #15803d" if is_cur2 else "2px solid #15803d"
         st.markdown(f"""
-        <div style="background: radial-gradient(circle at 10% 20%, #f0fdf4 0%, #e7f9ee 100%); border: {border2}; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(22,163,74,0.15); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: -11px; right: 20px; background: #d97706; color: white; font-size: 0.70rem; font-weight: 850; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.8px;">★ ARTISAN DEALER CHOICE ★</div>
+        <div style="background: #ffffff; border: {border2}; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(21,128,61,0.12); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: -11px; right: 20px; background: #d97706; color: #ffffff; font-size: 0.70rem; font-weight: 850; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.8px;">★ ARTISAN DEALER CHOICE ★</div>
             <div>
-                <span style="background: #16a34a; color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t2['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0; color: #0d2818; font-family: 'Playfair Display', serif;">{t2['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #14532d; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #166534; font-weight: 500;">/ month</span></div>
-                <p style="font-size: 0.85rem; color: #166534;">{t2['description']}</p>
-                <div style="border-top: 1px solid #a7f3d0; margin: 14px 0; padding-top: 12px;">
-                    <strong style="font-size: 0.82rem; color: #14532d;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #166534; padding-left: 18px; margin-top: 6px;">
+                <span style="background: #15803d; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t2['badge']}</span>
+                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t2['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
+                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t2['description']}</p>
+                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
+                    <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
+                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
                         {''.join(['<li>✅ ' + f + '</li>' for f in t2['features']])}
                     </ul>
                 </div>
@@ -1011,17 +1003,17 @@ elif nav_mode_index == 2:
     with tier_col3:
         t3 = MONETIZATION_TIERS["enterprise"]
         is_cur3 = (st.session_state["current_tier"] == "enterprise")
-        border3 = "3px solid #7c3aed" if is_cur3 else "1.5px solid #d5c8b5"
+        border3 = "3px solid #7c3aed" if is_cur3 else "1.5px solid #cbd5e1"
         st.markdown(f"""
-        <div style="background: #ffffff; border: {border3}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(40,50,45,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="background: #ffffff; border: {border3}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <span style="background: #f5f3ff; color: #7c3aed; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t3['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0; color: #5b21b6; font-family: 'Playfair Display', serif;">{t3['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #5b21b6; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ month</span></div>
-                <p style="font-size: 0.85rem; color: #475569;">{t3['description']}</p>
-                <div style="border-top: 1px solid #ebdccb; margin: 14px 0; padding-top: 12px;">
-                    <strong style="font-size: 0.82rem; color: #5b21b6;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #334155; padding-left: 18px; margin-top: 6px;">
+                <span style="background: #f5f3ff; color: #6d28d9; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t3['badge']}</span>
+                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t3['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
+                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t3['description']}</p>
+                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
+                    <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
+                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
                         {''.join(['<li>🚀 ' + f + '</li>' for f in t3['features']])}
                     </ul>
                 </div>
@@ -1209,15 +1201,15 @@ elif nav_mode_index == 6:
     col_s1, col_s2 = st.columns(2)
     with col_s1:
         st.markdown(f"""
-        <div style="background: #fffdf8; border: 1.5px solid #d5c8b5; border-top: 5px solid #d97706; border-radius: 12px; padding: 22px;">
-            <h3 style="color: #92400e; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg2_title']}</h3>
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #d97706; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
+            <h3 style="color: #0f172a; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg2_title']}</h3>
             <p style="color: #334155; line-height: 1.55;">{T['sdg2_desc']}</p>
         </div>
         """, unsafe_allow_html=True)
     with col_s2:
         st.markdown(f"""
-        <div style="background: #fffdf8; border: 1.5px solid #d5c8b5; border-top: 5px solid #16a34a; border-radius: 12px; padding: 22px;">
-            <h3 style="color: #166534; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg15_title']}</h3>
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #16a34a; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
+            <h3 style="color: #0f172a; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg15_title']}</h3>
             <p style="color: #334155; line-height: 1.55;">{T['sdg15_desc']}</p>
         </div>
         """, unsafe_allow_html=True)
