@@ -1,7 +1,7 @@
 """
-CropCare Pro - Retailer Edition
+CropCare Pro - Retailer Edition (Artisanal Botanical Atelier)
 On-Device Diagnostic & Smart Stock Dispensing Terminal for Agri-Input Retailers & Krishi Kendras.
-Features Full Vernacular Localization and Multi-Tier Monetization Engine.
+Crafted with bespoke botanical apothecary aesthetics, vernacular localization, and multi-tier monetization.
 """
 
 import os
@@ -29,71 +29,95 @@ from engine import (
 from translations import UI_TRANSLATIONS
 
 # ---------------------------------------------------------
-# Page Configuration & High-Contrast Dealer UI Styling
+# Page Configuration & Artisanal Botanical Atelier Styling
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="CropCare Pro | Agri-Retailer Station",
-    page_icon="🏪",
+    page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# Custom Artisanal CSS: Handcrafted botanical typography, parchment textures, gold filigree accents
 st.markdown("""
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,850;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-    /* Global App Container */
+    /* Global Background & Root Atmosphere */
     .stApp {
-        background-color: #f8fafc !important;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        background-color: #faf8f5 !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
     
     [data-testid="stMain"] {
-        color: #0f172a !important;
-        background-color: #f8fafc !important;
+        color: #1e293b !important;
+        background-color: #faf8f5 !important;
     }
-    [data-testid="stMain"] h1,
-    [data-testid="stMain"] h2,
-    [data-testid="stMain"] h3,
+    
+    /* Editorial Typography */
+    h1, h2, h3, .serif-font {
+        font-family: 'Playfair Display', Georgia, serif !important;
+        letter-spacing: -0.3px;
+    }
+    
+    [data-testid="stMain"] h1 {
+        color: #0d2818 !important;
+        font-weight: 850 !important;
+    }
+    [data-testid="stMain"] h2 {
+        color: #143e2b !important;
+        font-weight: 800 !important;
+    }
+    [data-testid="stMain"] h3 {
+        color: #194d35 !important;
+        font-weight: 750 !important;
+    }
     [data-testid="stMain"] h4,
     [data-testid="stMain"] h5,
     [data-testid="stMain"] h6 {
-        color: #0f172a !important;
-        font-weight: 750 !important;
+        color: #1b4332 !important;
+        font-weight: 700 !important;
     }
     [data-testid="stMain"] p,
     [data-testid="stMain"] span,
     [data-testid="stMain"] li {
-        color: #1e293b !important;
+        color: #2d3748 !important;
     }
     [data-testid="stMain"] [data-testid="stCaptionContainer"] p,
     [data-testid="stMain"] .stCaption {
-        color: #475569 !important;
+        color: #526154 !important;
         font-weight: 500 !important;
     }
     
-    /* Radio and widget labels */
+    /* Widget & Radio Labels */
     [data-testid="stRadio"] label p,
     [data-testid="stWidgetLabel"] label p {
-        color: #0f172a !important;
-        font-weight: 650 !important;
+        color: #163829 !important;
+        font-weight: 700 !important;
         font-size: 0.95rem !important;
     }
     
-    /* Tabs */
+    /* Tabs: Handcrafted Underline */
     .stTabs [data-baseweb="tab"] {
-        color: #334155 !important;
+        color: #4a5d4e !important;
         font-weight: 600 !important;
-        font-size: 0.92rem !important;
+        font-size: 0.94rem !important;
+        border-bottom: 2px solid transparent !important;
+        padding: 10px 18px !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #166534 !important;
-        font-weight: 750 !important;
-        border-bottom-color: #166534 !important;
+        color: #0f3d27 !important;
+        font-weight: 800 !important;
+        border-bottom: 2.5px solid #c28422 !important;
     }
     
-    /* Sidebar */
+    /* Sidebar: Warm Botanical Linen */
     [data-testid="stSidebar"] {
         background-color: #ffffff !important;
-        border-right: 1px solid #e2e8f0 !important;
+        border-right: 1.5px solid #e8e2d8 !important;
+        box-shadow: 2px 0 12px rgba(26, 46, 34, 0.04) !important;
     }
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
@@ -101,91 +125,194 @@ st.markdown("""
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] label {
-        color: #0f172a !important;
+        color: #183526 !important;
     }
     
-    /* Retail Header Banner */
-    .brand-header {
-        background: linear-gradient(135deg, #0f2e24 0%, #1e523f 100%);
-        color: white;
-        padding: 22px 28px;
-        border-radius: 14px;
-        box-shadow: 0 4px 15px rgba(15, 46, 36, 0.2);
-        margin-bottom: 20px;
+    /* Primary Action Buttons: Deep Forest Green with Gold Glow */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #123e2b 0%, #1e583f 100%) !important;
+        color: #ffffff !important;
+        border: 1px solid #d4af37 !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(18, 62, 43, 0.25) !important;
+        transition: all 0.25s ease !important;
     }
-    .brand-title {
-        font-size: 2.1rem;
+    .stButton > button[kind="primary"]:hover {
+        transform: translateY(-1.5px) !important;
+        box-shadow: 0 6px 18px rgba(18, 62, 43, 0.35) !important;
+        border-color: #f6c85f !important;
+    }
+    
+    /* Artisanal Header Banner */
+    .artisan-header {
+        background: radial-gradient(circle at 12% 18%, #17422f 0%, #0d2a1d 60%, #071911 100%);
+        color: #ffffff;
+        padding: 26px 32px;
+        border-radius: 16px;
+        border: 1px solid rgba(212, 175, 55, 0.45);
+        box-shadow: 0 10px 30px rgba(7, 25, 17, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        margin-bottom: 22px;
+        position: relative;
+        overflow: hidden;
+    }
+    .artisan-header::after {
+        content: "";
+        position: absolute;
+        top: 0; right: 0; bottom: 0; width: 220px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .artisan-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 2.35rem;
         font-weight: 850;
         margin: 0;
         letter-spacing: -0.5px;
-        color: #ffffff !important;
+        color: #fdfaf2 !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-    .brand-subtitle {
-        font-size: 1.0rem;
+    .artisan-subtitle {
+        font-size: 1.02rem;
         color: #d1fae5 !important;
-        margin-top: 4px;
+        margin-top: 5px;
         font-weight: 400;
+        letter-spacing: 0.2px;
     }
-    .brand-meta {
-        margin-top: 12px;
+    
+    /* Artisanal Badges */
+    .artisan-meta {
+        margin-top: 14px;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        font-size: 0.85rem;
+        align-items: center;
     }
-    .badge {
-        display: inline-block;
+    .badge-artisan {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         padding: 5px 14px;
         border-radius: 20px;
-        font-weight: 650;
+        font-weight: 700;
         font-size: 0.8rem;
+        letter-spacing: 0.3px;
     }
-    .badge-offline {
-        background-color: #34d399;
-        color: #064e3b !important;
-    }
-    .badge-plan {
-        background-color: #fbbf24;
+    .badge-gold {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         color: #78350f !important;
+        border: 1px solid #d97706;
     }
-    .badge-edition {
-        background-color: rgba(255, 255, 255, 0.22);
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.35);
+    .badge-emerald {
+        background: rgba(52, 211, 153, 0.2);
+        color: #6ee7b7 !important;
+        border: 1px solid rgba(52, 211, 153, 0.45);
+    }
+    .badge-parchment {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fefce8 !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
-    /* SKU Product Card in Inventory */
-    .sku-card {
+    /* Apothecary Product SKU Card */
+    .apothecary-sku {
         background: #ffffff;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 10px;
-        padding: 14px 18px;
-        margin-bottom: 12px;
-        transition: all 0.2s ease;
-    }
-    .sku-card:hover {
-        border-color: #10b981;
-        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.12);
-    }
-    
-    .meta-pill {
-        background: #f1f5f9;
-        border: 1px solid #cbd5e1;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 0.82rem;
-        color: #1e293b !important;
-    }
-    
-    .pricing-card {
-        background: #ffffff;
+        border: 1.5px solid #e7ded3;
         border-radius: 12px;
-        padding: 24px;
-        border: 2px solid #e2e8f0;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        padding: 16px 20px;
+        margin-bottom: 14px;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 8px rgba(35, 50, 40, 0.04);
+        position: relative;
+    }
+    .apothecary-sku:hover {
+        border-color: #2d6a4f;
+        box-shadow: 0 6px 18px rgba(45, 106, 79, 0.12);
+        transform: translateY(-1px);
+    }
+    
+    /* Apothecary Vintage Prescription Memo Card */
+    .apothecary-receipt {
+        background: #fffdfa;
+        border: 2px dashed #c9baa4;
+        border-radius: 14px;
+        padding: 30px 34px;
+        margin: 18px 0;
+        box-shadow: 0 8px 24px rgba(70, 55, 40, 0.08);
+        font-family: 'Playfair Display', Georgia, serif;
+        position: relative;
+    }
+    .apothecary-receipt::before {
+        content: "✦ OFFICIAL KRISHI KENDRA DISPENSARY ✦";
+        display: block;
+        text-align: center;
+        font-size: 0.76rem;
+        letter-spacing: 3px;
+        color: #8c7355;
+        font-weight: 700;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #e8dfd2;
+        padding-bottom: 8px;
+    }
+    .receipt-watermark {
+        position: absolute;
+        top: 45%; right: 40px;
+        transform: translateY(-50%) rotate(-14deg);
+        border: 2.5px solid rgba(185, 28, 28, 0.35);
+        color: rgba(185, 28, 28, 0.38);
+        font-size: 1.15rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        padding: 8px 18px;
+        border-radius: 8px;
+        text-transform: uppercase;
+        pointer-events: none;
+    }
+    
+    /* Museum Specimen Slide Mount for XAI */
+    .specimen-mount {
+        background: #ffffff;
+        border: 2px solid #dfd7cc;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 4px 14px rgba(30, 45, 35, 0.06);
+        text-align: center;
+        position: relative;
+    }
+    .specimen-tag {
+        background: #f4ede2;
+        border: 1px solid #c9bdae;
+        color: #5c4731;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 8px;
+    }
+    
+    /* Atmospheric Action Steps */
+    .action-step-artisan {
+        background: #f2f7f3;
+        border-left: 4px solid #1e5e3f;
+        padding: 12px 18px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        color: #123824 !important;
+        font-weight: 500;
+    }
+    
+    /* Gilded Pill Tag */
+    .artisan-pill {
+        background: #f4eee3;
+        border: 1px solid #d5c8b5;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        color: #382c1e !important;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -207,7 +334,7 @@ if "preset_hint" not in st.session_state:
 if "nav_index" not in st.session_state:
     st.session_state["nav_index"] = 0
 if "current_tier" not in st.session_state:
-    st.session_state["current_tier"] = "pro"  # Default to Pro dealer tier
+    st.session_state["current_tier"] = "pro"
 if "cart_items" not in st.session_state:
     st.session_state["cart_items"] = []
 if "farmer_name" not in st.session_state:
@@ -251,20 +378,20 @@ if st.session_state["current_image"] is None:
 # Sidebar Navigation & Settings
 # ---------------------------------------------------------
 with st.sidebar:
-    # Retail Shop Terminal Header
+    # Handcrafted Atelier Seal Logo
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-        <div style="background: linear-gradient(135deg, #0f2e24, #1e523f); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(15,46,36,0.25);">
-            <span style="font-size: 24px;">🏪</span>
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ebdccb;">
+        <div style="background: linear-gradient(135deg, #133926, #092318); width: 50px; height: 50px; border-radius: 12px; border: 1.5px solid #d4af37; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(9,35,24,0.3);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fef08a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
         </div>
         <div>
-            <div style="font-size: 1.15rem; font-weight: 850; color: #0f172a; line-height: 1.1;">CropCare Pro</div>
-            <div style="font-size: 0.72rem; color: #047857; font-weight: 750; text-transform: uppercase; letter-spacing: 0.5px;">Retail Counter POS</div>
+            <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 850; color: #0d2818; line-height: 1.1;">CropCare Pro</div>
+            <div style="font-size: 0.70rem; color: #a16207; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Botanical Retail POS</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("---")
     
     # Vernacular Language Selector
     lang_display_names = {
@@ -285,7 +412,7 @@ with st.sidebar:
     # Active language translation dictionary
     T = UI_TRANSLATIONS.get(selected_lang, UI_TRANSLATIONS["en"])
     
-    st.markdown("---")
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # Navigation Modes
     current_modes = T["nav_modes"]
@@ -299,53 +426,56 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Current Active Plan Badge
+    # Current Active Plan Badge (Artisanal Finishes)
     tier_info = MONETIZATION_TIERS[st.session_state["current_tier"]]
     st.markdown(f"""
-    <div style='background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 12px;'>
+    <div style='background: #fffdf8; border: 1.5px solid #d4af37; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(180, 130, 50, 0.08);'>
         <div style='display: flex; justify-content: space-between; align-items: center;'>
-            <span style='font-size: 0.75rem; font-weight: 700; color: #92400e; text-transform: uppercase;'>MEMBERSHIP PLAN</span>
-            <span style='background: {tier_info["color"]}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;'>{tier_info["name"].split()[0]}</span>
+            <span style='font-size: 0.72rem; font-weight: 800; color: #854d0e; letter-spacing: 0.5px;'>RETAIL TIER</span>
+            <span style='background: {tier_info["color"]}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.68rem; font-weight: 750;'>{tier_info["name"].split()[0]}</span>
         </div>
-        <div style='font-size: 0.95rem; font-weight: 800; color: #78350f; margin-top: 4px;'>{tier_info["name"]}</div>
-        <div style='font-size: 0.78rem; color: #92400e; margin-top: 2px;'>{tier_info["billing_period"]}</div>
-        <div style='font-size: 0.74rem; color: #64748b; margin-top: 6px; border-top: 1px dashed #fcd34d; padding-top: 4px;'>
-            Counter Scans Used: <strong>{st.session_state["scans_used_this_month"]}</strong> / {"Unlimited" if tier_info["scan_limit_monthly"] > 1000 else tier_info["scan_limit_monthly"]}
+        <div style='font-family: \"Playfair Display\", serif; font-size: 1.05rem; font-weight: 850; color: #1e3a2b; margin-top: 4px;'>{tier_info["name"]}</div>
+        <div style='font-size: 0.78rem; color: #a16207; font-weight: 600;'>{tier_info["billing_period"]}</div>
+        <div style='font-size: 0.74rem; color: #64748b; margin-top: 6px; border-top: 1px dashed #e5d7c3; padding-top: 4px;'>
+            Counter Scans: <strong>{st.session_state["scans_used_this_month"]}</strong> / {"Unlimited" if tier_info["scan_limit_monthly"] > 1000 else tier_info["scan_limit_monthly"]}
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    # Edge Engine Status
+    # Offline Edge Engine Status
     st.markdown(f"""
-    <div style='background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px;'>
-        <div style='font-size: 0.82rem; font-weight: 750; color: #166534;'>
+    <div style='background: #f2f8f4; border: 1px solid #a3cfb5; border-radius: 8px; padding: 11px;'>
+        <div style='font-size: 0.78rem; font-weight: 800; color: #134e2f; letter-spacing: 0.3px;'>
             {T["edge_engine_active"]}
         </div>
-        <div style='font-size: 0.76rem; color: #15803d; margin-top: 4px; line-height: 1.4;'>
+        <div style='font-size: 0.74rem; color: #195e3a; margin-top: 4px; line-height: 1.4;'>
             {T["edge_engine_desc"]}
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
-    st.caption(T["sidebar_footer"], unsafe_allow_html=True)
+    st.caption(f"✦ {T['sidebar_footer']} ✦", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# Header Banner
+# Artisanal Header Banner
 # ---------------------------------------------------------
 st.markdown(f"""
-<div class="brand-header">
+<div class="artisan-header">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
-            <div class="brand-title">{T["brand_title"]}</div>
-            <div class="brand-subtitle">{T["brand_subtitle"]}</div>
+            <div class="artisan-title">{T["brand_title"]}</div>
+            <div class="artisan-subtitle">{T["brand_subtitle"]}</div>
+        </div>
+        <div style="text-align: right; display: none; @media(min-width: 768px){{display: block;}}">
+            <span style="font-family: 'Playfair Display', Georgia, serif; font-size: 0.85rem; color: #fde68a; font-style: italic;">Atelier Dispensary</span>
         </div>
     </div>
-    <div class="brand-meta">
-        <span class="badge badge-offline">{T["badge_offline"]}</span>
-        <span class="badge badge-plan">🏆 {tier_info["name"]}</span>
-        <span class="badge badge-edition">{st.session_state["shop_name"]}</span>
+    <div class="artisan-meta">
+        <span class="badge-artisan badge-emerald">{T["badge_offline"]}</span>
+        <span class="badge-artisan badge-gold">🏆 {tier_info["name"]}</span>
+        <span class="badge-artisan badge-parchment">🏛️ {st.session_state["shop_name"]}</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -362,8 +492,8 @@ if nav_mode_index == 0:
         st.markdown(f"### **{T['step1_title']}**")
         st.caption(T["step1_caption"])
         
-        # Farmer customer profile inputs
-        with st.expander("👤 Farmer Customer Details (For Bill & Record)", expanded=True):
+        # Farmer customer profile inputs in artisanal styling
+        with st.expander("📋 Farmer Customer Ledger (For Prescription & Record)", expanded=True):
             f_col1, f_col2 = st.columns(2)
             with f_col1:
                 st.session_state["farmer_name"] = st.text_input(T["farmer_name_label"], value=st.session_state["farmer_name"])
@@ -479,27 +609,27 @@ if nav_mode_index == 0:
             if res["low_confidence_flag"]:
                 st.warning(T["low_conf_warning"])
                 
-            # Diagnosis Banner
+            # Artisanal Diagnosis Banner
             st.markdown(f"### **{T['step2_title']}**")
             
             diag_html = f"""
-            <div style="background: #ffffff; border-radius: 12px; border: 2.5px solid {res['severity_color']}; padding: 18px 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 16px;">
+            <div style="background: #ffffff; border-radius: 14px; border: 2.5px solid {res['severity_color']}; border-top: 6px solid {res['severity_color']}; padding: 20px 24px; box-shadow: 0 6px 18px rgba(35, 50, 40, 0.07); margin-bottom: 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline;">
                     <div>
-                        <span style="font-size: 0.80rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; font-weight: 700;">{T["detected_condition"]}</span>
-                        <h2 style="margin: 3px 0 0 0; color: #0f172a !important; font-size: 1.85rem; font-weight: 850;">{trans['label']}</h2>
-                        <div style="color: #334155 !important; font-size: 0.92rem; margin-top: 3px; font-style: italic; font-weight: 500;">{top_info['pathogen']}</div>
+                        <span style="font-size: 0.76rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 800;">{T["detected_condition"]}</span>
+                        <h2 style="margin: 3px 0 0 0; color: #0d2818 !important; font-family: 'Playfair Display', Georgia, serif; font-size: 2.0rem; font-weight: 850;">{trans['label']}</h2>
+                        <div style="color: #4b5563 !important; font-size: 0.95rem; margin-top: 3px; font-style: italic; font-weight: 500;">{top_info['pathogen']}</div>
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size: 2.2rem; font-weight: 850; color: {res['severity_color']}; line-height: 1.1;">{res['top_confidence_pct']}%</div>
-                        <div style="font-size: 0.70rem; color: #475569; font-weight: 700; letter-spacing: 0.5px;">{T["confidence_score"]}</div>
+                        <div style="font-size: 2.3rem; font-weight: 850; color: {res['severity_color']}; line-height: 1.1;">{res['top_confidence_pct']}%</div>
+                        <div style="font-size: 0.68rem; color: #64748b; font-weight: 750; letter-spacing: 0.8px;">{T["confidence_score"]}</div>
                     </div>
                 </div>
-                <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 10px;">
-                    <span class="meta-pill">{T["crop_label"]} <strong>{top_info['crop']}</strong></span>
-                    <span class="meta-pill">{T["severity_label"]} <strong style="color: {res['severity_color']};">{sev_label}</strong></span>
-                    <span class="meta-pill">{T["lesion_area_label"]} <strong>{res['lesion_coverage_pct']}%</strong></span>
-                    <span class="meta-pill">{T["inference_latency_label"]} <strong>{res['inference_time_ms']} ms</strong></span>
+                <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #ebdccb; display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span class="artisan-pill">{T["crop_label"]} <strong>{top_info['crop']}</strong></span>
+                    <span class="artisan-pill">{T["severity_label"]} <strong style="color: {res['severity_color']};">{sev_label}</strong></span>
+                    <span class="artisan-pill">{T["lesion_area_label"]} <strong>{res['lesion_coverage_pct']}%</strong></span>
+                    <span class="artisan-pill">{T["inference_latency_label"]} <strong>{res['inference_time_ms']} ms</strong></span>
                 </div>
             </div>
             """
@@ -508,17 +638,17 @@ if nav_mode_index == 0:
             # Read Aloud to Farmer Audio Button
             speech_text = f"{trans['label']}. {trans['step1']} {trans['step2']} {trans['step3']}"
             st.markdown(f"""
-            <div style='display: flex; align-items: center; gap: 12px; margin-bottom: 16px;'>
+            <div style='display: flex; align-items: center; gap: 12px; margin-bottom: 18px;'>
                 <button onclick="
                     const synth = window.speechSynthesis;
                     synth.cancel();
                     const utter = new SpeechSynthesisUtterance(`{speech_text}`);
                     utter.rate = 0.9;
                     synth.speak(utter);
-                " style='background-color: #0f2e24; color: #ffffff; border: none; padding: 9px 18px; border-radius: 6px; font-size: 0.92rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(15,46,36,0.3);'>
+                " style='background: linear-gradient(135deg, #0e3827, #1b4d36); color: #ffffff; border: 1px solid #d4af37; padding: 10px 20px; border-radius: 8px; font-size: 0.92rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(14,56,39,0.25);'>
                     {T["audio_btn"]} ({lang_display_names[lang]})
                 </button>
-                <span style='font-size: 0.82rem; color: #475569; font-weight: 500;'>{T["audio_caption"]}</span>
+                <span style='font-size: 0.82rem; color: #526154; font-weight: 500;'>{T["audio_caption"]}</span>
             </div>
             """, unsafe_allow_html=True)
             
@@ -537,35 +667,33 @@ if nav_mode_index == 0:
             with tab_stock:
                 st.markdown(f"##### **{T['stock_sku_header']}**")
                 
-                # List SKUs for this disease
                 stock_items = top_info.get("retail_inventory", [])
                 for idx, sku in enumerate(stock_items):
-                    p_badge = "🌟 RECOMMENDED PRIMARY" if sku.get("is_primary") else "ALTERNATIVE / BACKUP"
-                    p_badge_bg = "#ecfdf5" if sku.get("is_primary") else "#f8fafc"
-                    p_badge_color = "#047857" if sku.get("is_primary") else "#64748b"
+                    p_badge = "🌟 MASTER BIO-FORMULA" if sku.get("is_primary") else "ALTERNATIVE / SECONDARY"
+                    p_badge_bg = "#fef3c7" if sku.get("is_primary") else "#f1f5f9"
+                    p_badge_color = "#92400e" if sku.get("is_primary") else "#475569"
                     
                     st.markdown(f"""
-                    <div class="sku-card">
+                    <div class="apothecary-sku">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
-                                <span style="background: {p_badge_bg}; color: {p_badge_color}; font-size: 0.72rem; font-weight: 750; padding: 2px 8px; border-radius: 4px; border: 1px solid {p_badge_color}33;">{p_badge}</span>
-                                <h4 style="margin: 4px 0 2px 0; color: #0f172a;">{sku['name']}</h4>
-                                <div style="font-size: 0.82rem; color: #475569;">Brand: <strong>{sku['brand']}</strong> | Pack: <strong>{sku['pack_size']}</strong> | Category: <strong>{sku['category']}</strong></div>
+                                <span style="background: {p_badge_bg}; color: {p_badge_color}; font-size: 0.70rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">{p_badge}</span>
+                                <h4 style="margin: 6px 0 2px 0; color: #0d2818; font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem;">{sku['name']}</h4>
+                                <div style="font-size: 0.82rem; color: #475569;">Brand: <strong>{sku['brand']}</strong> | Pack: <strong>{sku['pack_size']}</strong> | Class: <strong>{sku['category']}</strong></div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">₹ {sku['mrp']}</div>
-                                <div style="font-size: 0.76rem; color: #16a34a; font-weight: 700;">Dealer Margin: {sku['margin_pct']}% (₹{sku['mrp'] - sku['dealer_price']})</div>
+                                <div style="font-size: 1.4rem; font-weight: 850; color: #0d2818;">₹ {sku['mrp']}</div>
+                                <div style="font-size: 0.76rem; color: #15803d; font-weight: 750;">Margin: {sku['margin_pct']}% (₹{sku['mrp'] - sku['dealer_price']})</div>
                             </div>
                         </div>
-                        <div style="margin-top: 8px; font-size: 0.85rem; color: #334155; background: #f8fafc; padding: 8px 12px; border-radius: 6px;">
+                        <div style="margin-top: 10px; font-size: 0.86rem; color: #2d3748; background: #faf7f2; border: 1px solid #eae2d6; padding: 10px 14px; border-radius: 6px;">
                             <strong>{T['dosage_label']}</strong> {sku['dosage']}<br>
-                            <span style="font-size: 0.80rem; color: #64748b;">{sku['usage_notes']}</span>
+                            <span style="font-size: 0.80rem; color: #526154;">{sku['usage_notes']}</span>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # Add to bill button
-                    b_col1, b_col2 = st.columns([1, 3])
+                    b_col1, b_col2 = st.columns([1.2, 2.8])
                     with b_col1:
                         if st.button(f"➕ Add to Bill (#{idx+1})", key=f"btn_add_sku_{sku['sku_id']}"):
                             st.session_state["cart_items"].append({
@@ -577,7 +705,7 @@ if nav_mode_index == 0:
                             })
                             st.toast(f"Added {sku['name']} to Customer Bill!", icon="🛒")
                     with b_col2:
-                        st.caption(f"Stock Status: **{sku['in_stock']} packs available** in counter shelves.")
+                        st.caption(f"Stock Status: **{sku['in_stock']} units ready** on shelf.")
                         
                 st.info(T["neem_tip"])
                 
@@ -585,15 +713,15 @@ if nav_mode_index == 0:
                 if st.session_state["cart_items"]:
                     total_cart_val = sum(item["price"] for item in st.session_state["cart_items"])
                     st.markdown(f"""
-                    <div style='background: #ecfdf5; border: 1.5px solid #10b981; border-radius: 8px; padding: 12px 16px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center;'>
+                    <div style='background: #fffdf9; border: 2px solid #d4af37; border-radius: 10px; padding: 14px 18px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(212,175,55,0.15);'>
                         <div>
-                            <span style='font-size: 0.85rem; font-weight: 700; color: #065f46;'>Cart: {len(st.session_state['cart_items'])} items added</span>
-                            <div style='font-size: 1.25rem; font-weight: 850; color: #047857;'>Total Bill: ₹ {total_cart_val}</div>
+                            <span style='font-size: 0.82rem; font-weight: 800; color: #92400e; text-transform: uppercase;'>ORDER TOTAL ({len(st.session_state['cart_items'])} ITEMS PRESCRIBED)</span>
+                            <div style='font-family: \"Playfair Display\", serif; font-size: 1.4rem; font-weight: 850; color: #0d2818;'>Total Bill: ₹ {total_cart_val}</div>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    if st.button("🧾 Proceed to Generate Invoice & Prescription Slip →", type="primary"):
+                    if st.button("🧾 View & Print Botanical Prescription Bill →", type="primary"):
                         st.session_state["nav_index"] = 1
                         st.rerun()
 
@@ -601,7 +729,7 @@ if nav_mode_index == 0:
                 st.markdown(f"**{T['guidance_directive']}** *{trans['tagline']}*")
                 for step_txt in [trans["step1"], trans["step2"], trans["step3"]]:
                     st.markdown(f"""
-                    <div class="action-step">
+                    <div class="action-step-artisan">
                         <strong>{T['action_prefix']}</strong> {step_txt}
                     </div>
                     """, unsafe_allow_html=True)
@@ -624,13 +752,12 @@ if nav_mode_index == 0:
 
 
 # =========================================================
-# MODE 1: RETAIL INVOICE & PRESCRIPTION GENERATOR
+# MODE 1: RETAIL INVOICE & APOTHECARY PRESCRIPTION GENERATOR
 # =========================================================
 elif nav_mode_index == 1:
     st.markdown(f"### **{T['inv_title']}**")
     st.markdown(f"<p style='color: #475569;'>{T['inv_desc']}</p>", unsafe_allow_html=True)
     
-    # Check if Pro or Enterprise
     if st.session_state["current_tier"] == "starter":
         st.warning("🔒 **Branded Invoice Generation is locked on the Free Starter plan.** Upgrade to Krishi Kendra Pro to print branded receipts with your shop GST and send 1-click WhatsApp prescriptions.")
         if st.button("⭐ Unlock Branded Receipts (Switch to Pro Plan Demo)"):
@@ -655,7 +782,6 @@ elif nav_mode_index == 1:
     # Cart items editor
     st.markdown("##### **Prescribed Products & Billing Items:**")
     
-    # If cart is empty, auto-populate from current diagnosis
     if not st.session_state["cart_items"] and st.session_state["inference_result"]:
         top_skus = st.session_state["inference_result"]["disease_info"].get("retail_inventory", [])
         if top_skus:
@@ -690,12 +816,65 @@ elif nav_mode_index == 1:
                 st.rerun()
 
     total_invoice_amt = sum(item["price"] for item in st.session_state["cart_items"])
-    st.markdown(f"### **Total Amount Due: ₹ {total_invoice_amt}**")
     
-    # Build text receipt
+    # ------------------ ARTISANAL VISUAL PRESCRIPTION SLIP ------------------
     diag_name = st.session_state["inference_result"]["disease_info"]["disease_name"] if st.session_state["inference_result"] else "Crop Pathology Check"
     crop_name = st.session_state["inference_result"]["disease_info"]["crop"] if st.session_state["inference_result"] else "Vegetable"
     
+    items_rows_html = "".join([
+        f"""<tr>
+            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; font-size: 0.95rem;'>
+                <strong>{idx+1}. {itm['name']}</strong> ({itm['pack_size']})<br>
+                <span style='font-size: 0.80rem; color: #64748b; font-family: sans-serif;'>Dosage: {itm['dosage']}</span>
+            </td>
+            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; text-align: right; font-weight: 700; font-size: 0.95rem;'>₹ {itm['price']}</td>
+        </tr>""" for idx, itm in enumerate(st.session_state["cart_items"])
+    ])
+    
+    visual_memo_html = f"""
+    <div class="apothecary-receipt">
+        <div class="receipt-watermark">AUTHENTICATED</div>
+        <div style="text-align: center; margin-bottom: 16px;">
+            <h2 style="margin: 0; color: #0d2818; font-size: 1.8rem;">{st.session_state['shop_name']}</h2>
+            <div style="font-size: 0.82rem; color: #78350f; font-family: sans-serif; letter-spacing: 0.5px;">GSTIN/Lic: {st.session_state['shop_gst']} • Tel: {st.session_state['shop_phone']}</div>
+            <div style="font-size: 0.78rem; color: #64748b; margin-top: 4px; font-family: sans-serif;">Receipt: POS-CK-{int(time.time())} • Date: {time.strftime('%d %B %Y, %H:%M')}</div>
+        </div>
+        
+        <div style="background: #faf6ef; border: 1px solid #e2d7c5; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: sans-serif; font-size: 0.85rem; display: flex; justify-content: space-between;">
+            <div>
+                <div>Customer: <strong>{st.session_state['farmer_name']}</strong></div>
+                <div>Location: <strong>{st.session_state['farmer_village']}</strong></div>
+            </div>
+            <div style="text-align: right;">
+                <div>Tested Crop: <strong>{crop_name}</strong></div>
+                <div>Diagnosis: <strong style="color: #b91c1c;">{diag_name}</strong></div>
+            </div>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px;">
+            <thead>
+                <tr style="border-bottom: 1.5px solid #d4af37; text-align: left; font-size: 0.80rem; color: #854d0e; text-transform: uppercase;">
+                    <th style="padding: 4px;">Prescribed Item & Spray Dosage</th>
+                    <th style="padding: 4px; text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {items_rows_html}
+            </tbody>
+        </table>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0d2818; padding-top: 12px; margin-top: 8px;">
+            <div style="font-size: 0.85rem; color: #526154; font-family: sans-serif;">Knapsack spray volume: 15L • Safe organic treatment</div>
+            <div style="text-align: right;">
+                <span style="font-size: 0.85rem; color: #64748b; font-family: sans-serif;">TOTAL CASH DUE:</span>
+                <span style="font-size: 1.6rem; font-weight: 900; color: #0d2818; margin-left: 8px;">₹ {total_invoice_amt}</span>
+            </div>
+        </div>
+    </div>
+    """
+    st.markdown(visual_memo_html, unsafe_allow_html=True)
+    
+    # Build text receipt for copy / download
     receipt_text = f"""============================================================
 {st.session_state['shop_name'].upper()}
 Reg/GSTIN: {st.session_state['shop_gst']}
@@ -737,7 +916,8 @@ Empowering Farmers with Accessible AI & Smart Agriculture.
 ============================================================
 """
     
-    st.code(receipt_text, language="text")
+    with st.expander("📄 View Plain Text Memo (Raw Format)"):
+        st.code(receipt_text, language="text")
     
     col_act1, col_act2, col_act3 = st.columns(3)
     with col_act1:
@@ -749,12 +929,11 @@ Empowering Farmers with Accessible AI & Smart Agriculture.
             type="primary"
         )
     with col_act2:
-        # WhatsApp Share Link
         encoded_msg = urllib.parse.quote(receipt_text)
         clean_phone = st.session_state['farmer_phone'].replace("+", "").replace("-", "").strip()
         wa_url = f"https://wa.me/91{clean_phone}?text={encoded_msg}"
         st.markdown(f"""
-        <a href="{wa_url}" target="_blank" style="display: inline-block; background-color: #25D366; color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; text-decoration: none; text-align: center; width: 100%;">
+        <a href="{wa_url}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
             📲 Send Bill via WhatsApp
         </a>
         """, unsafe_allow_html=True)
@@ -777,15 +956,15 @@ elif nav_mode_index == 2:
     with tier_col1:
         t1 = MONETIZATION_TIERS["starter"]
         is_cur1 = (st.session_state["current_tier"] == "starter")
-        border1 = "3px solid #64748b" if is_cur1 else "1px solid #cbd5e1"
+        border1 = "3px solid #64748b" if is_cur1 else "1.5px solid #d5c8b5"
         st.markdown(f"""
-        <div class="pricing-card" style="border: {border1};">
+        <div style="background: #ffffff; border: {border1}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(40,50,45,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <span style="background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 750; padding: 3px 10px; border-radius: 12px;">{t1['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0;">{t1['name']}</h3>
-                <div style="font-size: 1.8rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ forever</span></div>
+                <span style="background: #f1f5f9; color: #475569; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t1['badge']}</span>
+                <h3 style="margin: 8px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t1['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ forever</span></div>
                 <p style="font-size: 0.85rem; color: #475569;">{t1['description']}</p>
-                <div style="border-top: 1px solid #e2e8f0; margin: 12px 0; padding-top: 10px;">
+                <div style="border-top: 1px solid #ebdccb; margin: 14px 0; padding-top: 12px;">
                     <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
                     <ul style="font-size: 0.80rem; color: #334155; padding-left: 18px; margin-top: 6px;">
                         {''.join(['<li>' + f + '</li>' for f in t1['features']])}
@@ -802,19 +981,20 @@ elif nav_mode_index == 2:
             st.session_state["current_tier"] = "starter"
             st.rerun()
 
-    # Tier 2: Pro
+    # Tier 2: Pro (Gilded Emerald Velvet Finishes)
     with tier_col2:
         t2 = MONETIZATION_TIERS["pro"]
         is_cur2 = (st.session_state["current_tier"] == "pro")
-        border2 = "3px solid #16a34a" if is_cur2 else "1.5px solid #86efac"
+        border2 = "3px solid #16a34a" if is_cur2 else "2px solid #22c55e"
         st.markdown(f"""
-        <div class="pricing-card" style="border: {border2}; background: #f0fdf4;">
+        <div style="background: radial-gradient(circle at 10% 20%, #f0fdf4 0%, #e7f9ee 100%); border: {border2}; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(22,163,74,0.15); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: -11px; right: 20px; background: #d97706; color: white; font-size: 0.70rem; font-weight: 850; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.8px;">★ ARTISAN DEALER CHOICE ★</div>
             <div>
-                <span style="background: #16a34a; color: white; font-size: 0.75rem; font-weight: 750; padding: 3px 10px; border-radius: 12px;">{t2['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0; color: #166534;">{t2['name']}</h3>
-                <div style="font-size: 1.8rem; font-weight: 850; color: #14532d; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #166534; font-weight: 500;">/ month</span></div>
-                <p style="font-size: 0.85rem; color: #15803d;">{t2['description']}</p>
-                <div style="border-top: 1px solid #bbf7d0; margin: 12px 0; padding-top: 10px;">
+                <span style="background: #16a34a; color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t2['badge']}</span>
+                <h3 style="margin: 8px 0 2px 0; color: #0d2818; font-family: 'Playfair Display', serif;">{t2['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #14532d; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #166534; font-weight: 500;">/ month</span></div>
+                <p style="font-size: 0.85rem; color: #166534;">{t2['description']}</p>
+                <div style="border-top: 1px solid #a7f3d0; margin: 14px 0; padding-top: 12px;">
                     <strong style="font-size: 0.82rem; color: #14532d;">{T['included_features']}</strong>
                     <ul style="font-size: 0.80rem; color: #166534; padding-left: 18px; margin-top: 6px;">
                         {''.join(['<li>✅ ' + f + '</li>' for f in t2['features']])}
@@ -831,15 +1011,15 @@ elif nav_mode_index == 2:
     with tier_col3:
         t3 = MONETIZATION_TIERS["enterprise"]
         is_cur3 = (st.session_state["current_tier"] == "enterprise")
-        border3 = "3px solid #7c3aed" if is_cur3 else "1px solid #cbd5e1"
+        border3 = "3px solid #7c3aed" if is_cur3 else "1.5px solid #d5c8b5"
         st.markdown(f"""
-        <div class="pricing-card" style="border: {border3};">
+        <div style="background: #ffffff; border: {border3}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(40,50,45,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <span style="background: #f5f3ff; color: #7c3aed; font-size: 0.75rem; font-weight: 750; padding: 3px 10px; border-radius: 12px;">{t3['badge']}</span>
-                <h3 style="margin: 8px 0 2px 0; color: #5b21b6;">{t3['name']}</h3>
-                <div style="font-size: 1.8rem; font-weight: 850; color: #5b21b6; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ month</span></div>
+                <span style="background: #f5f3ff; color: #7c3aed; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t3['badge']}</span>
+                <h3 style="margin: 8px 0 2px 0; color: #5b21b6; font-family: 'Playfair Display', serif;">{t3['name']}</h3>
+                <div style="font-size: 2.0rem; font-weight: 850; color: #5b21b6; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/ month</span></div>
                 <p style="font-size: 0.85rem; color: #475569;">{t3['description']}</p>
-                <div style="border-top: 1px solid #e2e8f0; margin: 12px 0; padding-top: 10px;">
+                <div style="border-top: 1px solid #ebdccb; margin: 14px 0; padding-top: 12px;">
                     <strong style="font-size: 0.82rem; color: #5b21b6;">{T['included_features']}</strong>
                     <ul style="font-size: 0.80rem; color: #334155; padding-left: 18px; margin-top: 6px;">
                         {''.join(['<li>🚀 ' + f + '</li>' for f in t3['features']])}
@@ -853,8 +1033,6 @@ elif nav_mode_index == 2:
             st.rerun()
 
     st.markdown("---")
-    
-    # Dealer ROI projections
     st.markdown(f"#### **{T['roi_box_title']}**")
     st.info(f"💡 **Current Plan Impact ({tier_info['name']}):** {tier_info['roi_projection']}")
 
@@ -874,18 +1052,22 @@ elif nav_mode_index == 3:
     
     with col_img1:
         st.markdown(f"##### **{T['xai_col1_title']}**")
-        st.image(res["enhanced_img"], caption=T["xai_col1_caption"])
-        st.caption(f"Coverage: {res['prep_info']['leaf_coverage_ratio']*100:.1f}%")
+        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+        st.image(res["enhanced_img"])
+        st.markdown(f'<div class="specimen-tag">PLATE 01 • FOLIAR CONTOUR ({res["prep_info"]["leaf_coverage_ratio"]*100:.1f}%)</div></div>', unsafe_allow_html=True)
         
     with col_img2:
         st.markdown(f"##### **{T['xai_col2_title']}**")
-        st.image(res["heatmap_img"], caption=T["xai_col2_caption"])
+        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+        st.image(res["heatmap_img"])
+        st.markdown(f'<div class="specimen-tag" style="background: #fef2f2; color: #991b1b; border-color: #fecaca;">PLATE 02 • GRAD-CAM ACTIVATION MAP</div></div>', unsafe_allow_html=True)
         st.caption(T["xai_col2_sub"])
         
     with col_img3:
         st.markdown(f"##### **{T['xai_col3_title']}**")
-        st.image(res["annotated_img"], caption=T["xai_col3_caption"])
-        st.caption(f"Count: {res['lesion_count']}")
+        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+        st.image(res["annotated_img"])
+        st.markdown(f'<div class="specimen-tag">PLATE 03 • {res["lesion_count"]} LESION CLUSTERS</div></div>', unsafe_allow_html=True)
         
     st.markdown("---")
     
@@ -948,11 +1130,11 @@ elif nav_mode_index == 4:
             advice = T["risk_low_adv"]
 
         st.markdown(f"""
-        <div style='background: #ffffff; border-radius: 12px; border: 2.5px solid {status_color}; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);'>
-            <div style='font-size: 0.85rem; color: #475569; font-weight: 700; text-transform: uppercase;'>{T["radar_sim_label"]}</div>
-            <div style='font-size: 2.8rem; font-weight: 850; color: {status_color}; line-height: 1.1;'>{risk_score}%</div>
-            <div style='font-size: 1.1rem; font-weight: 800; color: {status_color}; margin-top: 4px; margin-bottom: 10px;'>{status_text}</div>
-            <p style='color: #1e293b; font-size: 0.95rem; line-height: 1.5; font-weight: 500;'>{advice}</p>
+        <div style='background: #fffdfa; border-radius: 14px; border: 2.5px solid {status_color}; padding: 24px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);'>
+            <div style='font-size: 0.82rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;'>{T["radar_sim_label"]}</div>
+            <div style='font-family: \"Playfair Display\", serif; font-size: 3.0rem; font-weight: 850; color: {status_color}; line-height: 1.1;'>{risk_score}%</div>
+            <div style='font-size: 1.15rem; font-weight: 800; color: {status_color}; margin-top: 4px; margin-bottom: 12px;'>{status_text}</div>
+            <p style='color: #2d3748; font-size: 0.95rem; line-height: 1.55; font-weight: 500;'>{advice}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1027,15 +1209,15 @@ elif nav_mode_index == 6:
     col_s1, col_s2 = st.columns(2)
     with col_s1:
         st.markdown(f"""
-        <div class="crop-card" style="border-top: 5px solid #d97706;">
-            <h3 style="color: #92400e; margin-top: 0;">{T['sdg2_title']}</h3>
-            <p style="color: #334155; line-height: 1.5;">{T['sdg2_desc']}</p>
+        <div style="background: #fffdf8; border: 1.5px solid #d5c8b5; border-top: 5px solid #d97706; border-radius: 12px; padding: 22px;">
+            <h3 style="color: #92400e; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg2_title']}</h3>
+            <p style="color: #334155; line-height: 1.55;">{T['sdg2_desc']}</p>
         </div>
         """, unsafe_allow_html=True)
     with col_s2:
         st.markdown(f"""
-        <div class="crop-card" style="border-top: 5px solid #16a34a;">
-            <h3 style="color: #166534; margin-top: 0;">{T['sdg15_title']}</h3>
-            <p style="color: #334155; line-height: 1.5;">{T['sdg15_desc']}</p>
+        <div style="background: #fffdf8; border: 1.5px solid #d5c8b5; border-top: 5px solid #16a34a; border-radius: 12px; padding: 22px;">
+            <h3 style="color: #166534; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg15_title']}</h3>
+            <p style="color: #334155; line-height: 1.55;">{T['sdg15_desc']}</p>
         </div>
         """, unsafe_allow_html=True)
