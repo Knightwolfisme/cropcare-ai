@@ -1,10 +1,91 @@
 """
-CropCare AI - Agronomic Knowledge Base & Multilingual Guidelines
-Aligned with PlantVillage dataset standards and UN Sustainable Development Goals (SDG 2 Zero Hunger & SDG 15 Life on Land).
+CropCare AI Pro - Retailer Knowledge Base, Smart Inventory & Monetization Tiers
+Designed for Agri-Input Retailers, Krishi Kendra Dealers, and Pesticide/Fertilizer Shopkeepers.
+Bridges over-the-counter leaf diagnosis with instant retail product dispensing and monetization.
 """
 
 from typing import Dict, Any, List
 
+# ---------------------------------------------------------
+# Retail Monetization Tiers for Agri-Shopkeepers
+# ---------------------------------------------------------
+MONETIZATION_TIERS: Dict[str, Dict[str, Any]] = {
+    "starter": {
+        "id": "starter",
+        "name": "Kendra Starter (Free)",
+        "badge": "FREE FOREVER",
+        "price_inr": 0,
+        "billing_period": "Free",
+        "scan_limit_monthly": 30,
+        "color": "#64748b",
+        "description": "Essential diagnostic tool for small village fertilizer & seed kiosks.",
+        "features": [
+            "Up to 30 farmer leaf counter scans/month",
+            "100% Offline Edge MobileNet diagnosis",
+            "Basic disease identification & generic treatment recipes",
+            "Standard digital screen view",
+            "Basic camera capture & file upload"
+        ],
+        "locked_features": [
+            "Shop-branded billing invoice & prescription generation",
+            "Automatic stock SKU matching & inventory pricing",
+            "Direct WhatsApp prescription sending to farmer",
+            "Local vernacular voice audio readout for walk-in farmers",
+            "Hyper-local outbreak risk radar for inventory pre-stocking",
+            "Multi-branch counter sync & bulk customer SMS broadcasts"
+        ],
+        "roi_projection": "Helps build farmer footfall and establishes trust with free initial leaf health checks."
+    },
+    "pro": {
+        "id": "pro",
+        "name": "Krishi Kendra Pro",
+        "badge": "MOST POPULAR FOR RETAILERS",
+        "price_inr": 499,
+        "billing_period": "₹499 / month (or ₹4,999 / year - Save 17%)",
+        "scan_limit_monthly": 999999,  # Unlimited
+        "color": "#16a34a",
+        "description": "Complete retail sales booster & automated prescription POS for agri-input dealers.",
+        "features": [
+            "⚡ UNLIMITED counter leaf scans (100% offline)",
+            "🏪 Custom Shop Branding: Prints receipts with your Shop Name, GSTIN & Phone",
+            "📦 Smart Inventory Linker: Automatically matches diagnosed disease to your in-stock SKUs",
+            "🧾 1-Click WhatsApp Prescription Slip & Invoice to customer's mobile",
+            "🔊 Multilingual Voice Assistant: Speaks instructions in Hindi, Kannada, Telugu, English",
+            "⛅ Outbreak Radar: 7-day predictive outbreak forecast to order stock before demand surges",
+            "💰 Retail Margin Tracker: View profit margins on recommended bio-pesticides & treatments"
+        ],
+        "locked_features": [
+            "Multi-branch dealership sync (enterprise)",
+            "Bulk outbreak SMS broadcasts to 5,000+ farmer phonebook"
+        ],
+        "roi_projection": "Increases average farmer basket size by ₹350–₹700 per visit. Eliminates wrong pesticide returns. Pays for itself with just 2 farmer visits/month!"
+    },
+    "enterprise": {
+        "id": "enterprise",
+        "name": "Distributor & Multi-Branch Enterprise",
+        "badge": "FOR AGRI-DEALERSHIPS & CHAINS",
+        "price_inr": 1999,
+        "billing_period": "₹1,999 / month (or ₹19,999 / year)",
+        "scan_limit_monthly": 999999,
+        "color": "#7c3aed",
+        "description": "For large agri-distributors, FPOs, and multi-location pesticide retail networks.",
+        "features": [
+            "🏢 Multi-Branch License: Sync up to 10 retail counter terminals across districts",
+            "📲 Outbreak Broadcast Engine: Send bulk SMS alerts to 5,000+ local farmers during blight risks",
+            "📊 Wholesale ERP & Stock Connector: Custom CSV/API integration with your billing software",
+            "👨‍🔬 Priority Agronomist Video Escalation: 15-minute SLA with certified university pathologists",
+            "📈 Regional Demand Heatmap: See which diseases are peaking across nearby villages",
+            "🏷️ Custom White-Labeling: Deploy under your own dealership brand name"
+        ],
+        "locked_features": [],
+        "roi_projection": "Drives ₹45,000–₹1,20,000 in additional seasonal inventory turns through timely regional outbreak advisories."
+    }
+}
+
+
+# ---------------------------------------------------------
+# Retail Shop Database: Diseases, Pathology & In-Stock SKUs
+# ---------------------------------------------------------
 DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
     "Tomato___Early_Blight": {
         "crop": "Tomato",
@@ -16,24 +97,64 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "5% - 25% leaf area affected. Lesions coalescing, early yellowing.",
             "severe": "Over 25% leaf area affected. Defoliation progressing upward to stems."
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-NEEM-10K",
+                "name": "EcoShield Neem Gold 10,000 PPM",
+                "brand": "KrishiBio Organics",
+                "category": "Bio-Pesticide",
+                "pack_size": "250 ml",
+                "mrp": 280,
+                "dealer_price": 195,
+                "margin_pct": 30.3,
+                "dosage": "30-40 ml per 15L Knapsack Pump (2.5 ml/L)",
+                "in_stock": 42,
+                "is_primary": True,
+                "usage_notes": "Spray early morning or evening. Acts as repellent and disrupts fungal spore wall."
+            },
+            {
+                "sku_id": "SKU-TRICHO-WP",
+                "name": "Tricho-Care Bio-Fungicide (Trichoderma viride 1% WP)",
+                "brand": "GreenCrop Biotech",
+                "category": "Bio-Control Agent",
+                "pack_size": "500 gm",
+                "mrp": 210,
+                "dealer_price": 140,
+                "margin_pct": 33.3,
+                "dosage": "50 gm per 15L Knapsack Pump (3.5 gm/L)",
+                "in_stock": 28,
+                "is_primary": True,
+                "usage_notes": "Beneficial fungus that parasitizes Alternaria hyphae. Mix with water and apply to foliage and roots."
+            },
+            {
+                "sku_id": "SKU-MANCO-75",
+                "name": "Mancozeb 75% WP Contact Protectant",
+                "brand": "AgroChem India",
+                "category": "Curative Chemical",
+                "pack_size": "500 gm",
+                "mrp": 320,
+                "dealer_price": 255,
+                "margin_pct": 20.3,
+                "dosage": "30 gm per 15L Pump (2 gm/L)",
+                "in_stock": 18,
+                "is_primary": False,
+                "usage_notes": "Dispense ONLY if foliar damage exceeds 25% or persistent rain prevents bio-control."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "Carefully prune and remove infected lower leaves with sanitized shears to halt vertical spore spread.",
-                "Bag and destroy pruned leaves outside the crop perimeter — do not compost infected foliage.",
-                "Sterilize pruning equipment in a 10% sodium hypochlorite or rubbing alcohol solution."
+                "Advise farmer to immediately prune infected bottom leaves and burn outside plot boundary.",
+                "Sanitize pruning tools with 10% bleach or rubbing spirit between beds."
             ],
             "organic_bio_treatments": [
-                "Apply cold-pressed Neem Oil bio-spray (5 ml neem oil + 2 ml organic surfactant/dish soap per 1 liter lukewarm water). Spray thoroughly at dawn or dusk.",
-                "Foliar spray with Trichoderma viride or Bacillus subtilis bio-fungicide (5g/L water) to colonize leaf surfaces and outcompete fungal hyphae.",
-                "Apply Potassium Bicarbonate or Baking Soda bio-spray (3g/L water + horticultural oil) to alter leaf surface pH against spores."
+                "Dispense EcoShield Neem 10,000 PPM (2.5 ml/L) mixed with Tricho-Care WP (5g/L).",
+                "Foliar potassium bicarbonate bio-wash to alter leaf surface pH against Alternaria spores."
             ],
             "cultural_prevention": [
-                "Switch to drip or furrow irrigation; avoid overhead sprinkler watering to keep foliage strictly dry.",
-                "Maintain minimum 60 cm inter-plant spacing to enhance air circulation and reduce micro-humidity.",
-                "Apply 2 inches of clean straw mulch around plant bases to prevent soil-splashing during rains.",
-                "Implement a 3-year crop rotation with non-solanaceous crops (avoid peppers, potatoes, eggplants)."
+                "Advise drip watering at root zone only; overhead sprinkling splashes spores onto upper leaves.",
+                "Ensure minimum 60 cm plant spacing to improve canopy airflow."
             ],
-            "chemical_advisory": "Synthetic fungicide (e.g. Mancozeb 75% WP or Chlorothalonil) is ONLY advised as a last resort if disease incidence exceeds 30% during warm rainy spells. Prioritize bio-controls to protect soil microbiome and beneficial insects."
+            "chemical_advisory": "Recommend synthetic contact fungicide (Mancozeb 75%) strictly as fallback if canopy defoliation exceeds economic injury threshold (>25%)."
         },
         "environmental_risk": {
             "temp_optimum": "24°C - 29°C",
@@ -43,31 +164,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Tomato Early Blight",
-                "tagline": "Fungal infection detected. Immediate organic containment recommended.",
-                "step1": "Remove infected lower leaves immediately.",
-                "step2": "Apply neem bio-spray (5ml/L) in early morning or evening.",
-                "step3": "Water at the soil base only; keep foliage dry."
+                "tagline": "Alternaria fungal infection. Recommend Bio-Fungicide + Neem Gold bundle.",
+                "step1": "Prune infected lower foliage immediately and discard away from field.",
+                "step2": "Apply EcoShield Neem Gold (35ml/pump) + Tricho-Care Bio-Fungicide.",
+                "step3": "Water at base only; instruct farmer to halt overhead irrigation."
             },
             "hi": {
-                "label": "टमाटर अगेती झुलसा (अर्ली ब्लाइट)",
-                "tagline": "फफूंद संक्रमण का पता चला। जैविक रोकथाम तुरंत शुरू करें।",
-                "step1": "संक्रमित निचले पत्तों को तुरंत काटकर खेत से दूर नष्ट करें।",
-                "step2": "नीम का काढ़ा या नीम तेल (5 मिली/लीटर) सुबह या शाम छिड़कें।",
-                "step3": "पौधों की जड़ों में ही पानी दें; पत्तियों को गीला न होने दें।"
+                "label": "टमाटर अगेती झुलसा (Early Blight)",
+                "tagline": "अल्टरनेरिया फफूंद संक्रमण। जैविक कवकनाशी + नीम तेल का कॉम्बो दें।",
+                "step1": "किसान से कहें कि रोगी पत्तों को काटकर तुरंत खेत से दूर नष्ट करे।",
+                "step2": "इकोशील्ड नीम गोल्ड (35ml/पंप) + ट्राइको-केयर जैविक कवकनाशी का घोल छिड़कें।",
+                "step3": "पौधे की जड़ में ही पानी दें, ऊपर से पानी का छिड़काव तुरंत बंद कराएं।"
             },
             "kn": {
-                "label": "ಟೊಮೆಟೊ ಮುಂಗಾರು ರೋಗ (ಅರ್ಲಿ ಬ್ಲೈಟ್)",
-                "tagline": "ಶಿಲೀಂಧ್ರ ಸೋಂಕು ಪತ್ತೆಯಾಗಿದೆ. ಸಾವಯವ ನಿಯಂತ್ರಣ ತಕ್ಷಣ ಪ್ರಾರಂಭಿಸಿ.",
-                "step1": "ಸೋಂಕಿತ ಕೆಳಗಿನ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ಕತ್ತರಿಸಿ ನಾಶಮಾಡಿ.",
-                "step2": "ಬೇವಿನ ಎಣ್ಣೆ ಕಷಾಯವನ್ನು (5 ಮಿಲಿ/ಲೀಟರ್) ಬೆಳಿಗ್ಗೆ ಅಥವಾ ಸಂಜೆ ಸಿಂಪಡಿಸಿ.",
-                "step3": "ಗಿಡದ ಬುಡಕ್ಕೆ ಮಾತ್ರ ನೀರು ಹಾಕಿ, ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ."
+                "label": "ಟೊಮೆಟೊ ಮುಂಗಾರು ರೋಗ (Early Blight)",
+                "tagline": "ಆಲ್ಟರ್ನೇರಿಯಾ ಶಿಲೀಂಧ್ರ ಸೋಂಕು. ಜೈವಿಕ ಶಿಲೀಂಧ್ರನಾಶಕ + ಬೇವಿನ ಎಣ್ಣೆ ಕಾಂಬೋ ಶಿಫಾರಸು ಮಾಡಿ.",
+                "step1": "ಸೋಂಕಿತ ಕೆಳಗಿನ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ಕತ್ತರಿಸಿ ಹೊಲದಿಂದ ಹೊರಗೆ ನಾಶಮಾಡಲು ತಿಳಿಸಿ.",
+                "step2": "ಬೇವಿನ ಎಣ್ಣೆ (35ml/ಪಂಪ್) + ಟ್ರೈಕೋ-ಕೇರ್ ಜೈವಿಕ ಶಿಲೀಂಧ್ರನಾಶಕ ಸಿಂಪಡಿಸಿ.",
+                "step3": "ಗಿಡದ ಬುಡಕ್ಕೆ ಮಾತ್ರ ನೀರುಣಿಸಿ, ಎಲೆಗಳ ಮೇಲೆ ನೀರು ಸಿಂಪಡಿಸುವುದನ್ನು ನಿಲ್ಲಿಸಿ."
             },
             "te": {
-                "label": "టమోటా ముందస్తు తెగులు (ఎర్లీ బ్లైట్)",
-                "tagline": "శిలీంధ్ర సంక్రమణ గుర్తించబడింది. వెంటనే సేంద్రీయ నివారణ చర్యలు చేపట్టండి.",
-                "step1": "సోకిన క్రింది ఆకులను వెంటనే తొలగించి నాశనం చేయండి.",
-                "step2": "వేప నూనె మిశ్రమాన్ని (5 మి.లీ/లీటరు) ఉదయం లేదా సాయంత్రం పిచికారీ చేయండి.",
-                "step3": "మొక్కల మొదట్లోనే నీరు పోయండి; ఆకులపై నీరు పడనివ్వకండి."
+                "label": "టమోటా ముందస్తు తెగులు (Early Blight)",
+                "tagline": "ఆల్టర్నేరియా ఫంగస్ తెగులు. బయో-శిలీంధ్రనాశకం + వేప నూనె కాంబో సిఫారసు చేయండి.",
+                "step1": "తెగులు సోకిన క్రింది ఆకులను వెంటనే తొలగించి దూరంగా కాల్చివేయమని చెప్పండి.",
+                "step2": "వేప నూనె (35ml/పంప్) + ట్రైకో-కేర్ బయో-స్ప్రే పిచికారీ చేయించండి.",
+                "step3": "మొక్కల మొదట్లోనే నీరు పోయాలి; ఆకులపై నీరు పడనివ్వకండి."
             }
         }
     },
@@ -81,21 +202,64 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "Fast spreading dark blotches across stems and foliage.",
             "severe": "Widespread blight, rapid tissue death, and foul-smelling collapse."
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-COPPER-OX",
+                "name": "Kocide Bio-Shield Copper Hydroxide 53.8% DF",
+                "brand": "DuPont / Corteva",
+                "category": "Bio-Approved Fungicide",
+                "pack_size": "250 gm",
+                "mrp": 380,
+                "dealer_price": 275,
+                "margin_pct": 27.6,
+                "dosage": "35 gm per 15L Knapsack Pump (2.2 gm/L)",
+                "in_stock": 22,
+                "is_primary": True,
+                "usage_notes": "High potency copper protective barrier preventing Phytophthora oospore entry."
+            },
+            {
+                "sku_id": "SKU-BORDEAUX-PACK",
+                "name": "ReadyBordeaux 1% Instant Micronized Powder",
+                "brand": "KrishiBio Organics",
+                "category": "Organic Protectant",
+                "pack_size": "1 kg",
+                "mrp": 260,
+                "dealer_price": 180,
+                "margin_pct": 30.8,
+                "dosage": "100 gm per 15L Pump",
+                "in_stock": 35,
+                "is_primary": True,
+                "usage_notes": "Classic organic copper sulfate + lime protectant. Highly residual wash-off resistance."
+            },
+            {
+                "sku_id": "SKU-CYMOX-MAN",
+                "name": "Curzate Cymoxanil 8% + Mancozeb 64% WP",
+                "brand": "AgroChem India",
+                "category": "Systemic Curative",
+                "pack_size": "500 gm",
+                "mrp": 590,
+                "dealer_price": 460,
+                "margin_pct": 22.0,
+                "dosage": "35 gm per 15L Pump",
+                "in_stock": 14,
+                "is_primary": False,
+                "usage_notes": "High urgency curative systemic. Recommend if field epidemic is spreading within 48h."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "HIGH URGENCY: Immediately isolate affected plants. Phytophthora reproduces within 48 hours under cool wet conditions.",
-                "Remove entire badly stricken plants and seal in disposal bags; do not walk through wet field to avoid spreading spores."
+                "URGENT: Advise farmer to decontaminate field edges and rogue out collapsed plants immediately.",
+                "Instruct farmer not to walk through wet field foliage to prevent physical spore dispersal."
             ],
             "organic_bio_treatments": [
-                "Spray copper-based bio-approved Bordeaux mixture (1%) or Copper Octanoate on remaining healthy foliage.",
-                "Apply Bacillus amyloliquefaciens microbial spray to suppress sporulation.",
-                "Compost tea extract foliar wash to reinforce benign microbial barrier."
+                "Dispense ReadyBordeaux 1% or Kocide Copper Hydroxide protectant.",
+                "Apply Bacillus amyloliquefaciens microbial bio-spray onto healthy buffer plants."
             ],
             "cultural_prevention": [
-                "Maximize ventilation in polyhouse/field; stake and prune foliage to promote quick morning drying.",
-                "Eliminate volunteer potato and nightshade weed hosts near field margins."
+                "Stake plants high to improve air velocity through bottom canopy.",
+                "Eradicate nightshade weeds and volunteer potato hosts near tomato plots."
             ],
-            "chemical_advisory": "If outbreak is epidemic and weather forecast shows continuous rain, targeted systemic fungicides (e.g. Metalaxyl + Mancozeb) may be used under agronomic supervision."
+            "chemical_advisory": "If rain is continuous and disease is severe, dispense Cymoxanil + Mancozeb systemic formulation."
         },
         "environmental_risk": {
             "temp_optimum": "15°C - 22°C (Cool and humid)",
@@ -105,31 +269,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Tomato Late Blight",
-                "tagline": "Severe Oomycete infection. High urgency action required.",
-                "step1": "Remove severely blighted foliage immediately.",
-                "step2": "Apply organic copper bio-spray or Bordeaux mixture.",
-                "step3": "Ensure maximum ventilation and eliminate standing water."
+                "tagline": "High-urgency Oomycete blight. Recommend Copper Hydroxide / Bordeaux bundle.",
+                "step1": "Rogue out and burn badly blighted plants outside field immediately.",
+                "step2": "Dispense Kocide Copper Bio-Shield or ReadyBordeaux 1% immediately.",
+                "step3": "Ensure farmer improves field drainage and prunes low hanging branches."
             },
             "hi": {
-                "label": "टमाटर पछेती झुलसा (लेट ब्लाइट)",
-                "tagline": "अत्यधिक संक्रामक रोग। तुरंत बचाव कदम उठाएं।",
-                "step1": "संक्रमित पौधों और पत्तियों को तुरंत हटाकर जला दें।",
-                "step2": "बोर्डो मिश्रण या कॉपर कवकनाशी का छिड़काव करें।",
-                "step3": "खेत में हवा का संचार बढ़ाएं और पानी जमा न होने दें।"
+                "label": "टमाटर पछेती झुलसा (Late Blight)",
+                "tagline": "गंभीर संक्रामक बीमारी। तुरंत कॉपर कवकनाशी या बोर्डो मिश्रण दें।",
+                "step1": "रोगग्रस्त पौधों को तुरंत उखाड़कर खेत से बाहर ले जाकर जलाएं।",
+                "step2": "कोसाइड कॉपर हाइड्रोक्साइड या रेडी-बोर्डो मिश्रण 1% का छिड़काव कराएं।",
+                "step3": "खेत में हवा का संचार बढ़ाएं और पानी का जमाव तुरंत खत्म करें।"
             },
             "kn": {
-                "label": "ಟೊಮೆಟೊ ತಡವಾದ ರೋಗ (ಲೇಟ್ ಬ್ಲೈಟ್)",
-                "tagline": "ತೀವ್ರ ಸಾಂಕ್ರಾಮಿಕ ರೋಗ. ತುರ್ತು ಕ್ರಮ ಅಗತ್ಯ.",
-                "step1": "ತೀವ್ರವಾಗಿ ಬಾಧಿತ ಎಲೆಗಳನ್ನು ಕೂಡಲೇ ಕಿತ್ತು ಸುಟ್ಟುಹಾಕಿ.",
-                "step2": "ಬೋರ್ಡೋ ದ್ರಾವಣ ಅಥವಾ ತಾಮ್ರದ ಜೈವಿಕ ಕೀಟನಾಶಕ ಸಿಂಪಡಿಸಿ.",
+                "label": "ಟೊಮೆಟೊ ತಡವಾದ ರೋಗ (Late Blight)",
+                "tagline": "ತೀವ್ರ ಸಾಂಕ್ರಾಮಿಕ ರೋಗ. ತಾಮ್ರದ ಜೈವಿಕ ಕೀಟನಾಶಕ ಅಥವಾ ಬೋರ್ಡೋ ಮಿಶ್ರಣ ನೀಡಿ.",
+                "step1": "ತೀವ್ರವಾಗಿ ಬಾಧಿತ ಗಿಡಗಳನ್ನು ತಕ್ಷಣ ಕಿತ್ತು ಹೊಲದಿಂದ ಹೊರಗೆ ಸುಟ್ಟುಹಾಕಿ.",
+                "step2": "ತಾಮ್ರದ ಜೈವಿಕ ಕೀಟನಾಶಕ ಅಥವಾ ಬೋರ್ಡೋ ಮಿಶ್ರಣ 1% ಸಿಂಪಡಿಸಲು ತಿಳಿಸಿ.",
                 "step3": "ಗಾಳಿಯಾಡುವಿಕೆಯನ್ನು ಹೆಚ್ಚಿಸಿ ಮತ್ತು ನಿಂತ ನೀರನ್ನು ತೆರವುಗೊಳಿಸಿ."
             },
             "te": {
                 "label": "టమోటా లేట్ బ్లైట్ తెగులు",
-                "tagline": "తీవ్రమైన ఫంగస్ తెగులు. తక్షణమే నివారణ చర్యలు తీసుకోండి.",
-                "step1": "బాధిత ఆకులను తొలగించి వెంటనే దూరంగా కాల్చివేయండి.",
-                "step2": "బోర్డో మిశ్రమం లేదా కాపర్ బయో-స్ప్రే పిచికారీ చేయండి.",
-                "step3": "మొక్కల మధ్య గాలి ప్రసరణ ఉండేలా చూడండి."
+                "tagline": "తీవ్రమైన ఫంగస్ తెగులు. కాపర్ బయో-స్ప్రే లేదా బోర్డో మిశ్రమం సిఫారసు చేయండి.",
+                "step1": "బాధిత మొక్కలను తొలగించి వెంటనే దూరంగా కాల్చివేయమని చెప్పండి.",
+                "step2": "కాపర్ బయో-షీల్డ్ లేదా బోర్డో మిశ్రమాన్ని వెంటనే పిచికారీ చేయించండి.",
+                "step3": "మొక్కల మధ్య గాలి ప్రసరణ ఉండేలా చూసుకోండి."
             }
         }
     },
@@ -143,22 +307,64 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "Dense spotting, localized leaf yellowing and curling.",
             "severe": "Widespread scorch, defoliation exposing green fruit to sunscald."
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-BACTO-STOP",
+                "name": "BactoStop Streptomycin + Tetracycline 90:10 SP",
+                "brand": "AgroChem India",
+                "category": "Agricultural Bactericide",
+                "pack_size": "50 gm",
+                "mrp": 120,
+                "dealer_price": 82,
+                "margin_pct": 31.7,
+                "dosage": "6 gm per 15L Knapsack Pump (with Copper)",
+                "in_stock": 55,
+                "is_primary": True,
+                "usage_notes": "Mix with copper oxychloride for synergistic bacterial control."
+            },
+            {
+                "sku_id": "SKU-COPPER-OXY",
+                "name": "Blitox 50 Copper Oxychloride 50% WP",
+                "brand": "Rallis India / Tata",
+                "category": "Bactericide / Fungicide",
+                "pack_size": "500 gm",
+                "mrp": 310,
+                "dealer_price": 235,
+                "margin_pct": 24.2,
+                "dosage": "45 gm per 15L Pump (3 gm/L)",
+                "in_stock": 31,
+                "is_primary": True,
+                "usage_notes": "Essential companion to BactoStop. Provides surface bactericidal barrier."
+            },
+            {
+                "sku_id": "SKU-BIO-SILICA",
+                "name": "SilicaShield Bio-Barrier Foliar Spray",
+                "brand": "GreenCrop Biotech",
+                "category": "Plant Immunity Booster",
+                "pack_size": "500 ml",
+                "mrp": 340,
+                "dealer_price": 225,
+                "margin_pct": 33.8,
+                "dosage": "30 ml per 15L Pump",
+                "in_stock": 19,
+                "is_primary": False,
+                "usage_notes": "Strengthens epidermal leaf cell walls against bacterial perforation."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "Refrain from working or cultivating plants when foliage is wet from morning dew or rain.",
-                "Remove heavily blighted leaves with alcohol-sanitized tools."
+                "Tell farmer NOT to enter field while foliage is wet from morning dew or rain.",
+                "Sterilize harvesting crates and equipment."
             ],
             "organic_bio_treatments": [
-                "Apply fixed copper bio-fungicide combined with certified organic Bacillus subtilis.",
-                "Garlic-chili aqueous extract spray as a natural antimicrobial barrier.",
-                "Foliar bio-silicon formulation to thicken epidermal cell walls against bacterial entry."
+                "Dispense Blitox Copper Oxychloride + BactoStop combination.",
+                "SilicaShield foliar booster to fortify leaf epidermis."
             ],
             "cultural_prevention": [
-                "Use certified disease-free, hot-water treated seeds for nursery raising.",
-                "Avoid using recirculated pond water for irrigation.",
-                "Strict 2-year rotation with non-host crops."
+                "Advise farmer to purchase certified pathogen-tested seed for next crop nursery.",
+                "Avoid using unchlorinated pond water for foliar spraying."
             ],
-            "chemical_advisory": "Bactericides with copper hydroxide + mancozeb synergy. Avoid overuse to prevent copper-resistant Xanthomonas strains."
+            "chemical_advisory": "Copper + Streptocycline tank mix is the agronomic gold standard for bacterial speck/spot."
         },
         "environmental_risk": {
             "temp_optimum": "25°C - 30°C",
@@ -168,31 +374,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Tomato Bacterial Spot",
-                "tagline": "Bacterial pathogen detected. Disinfect and apply copper bio-protectants.",
-                "step1": "Do not touch plants while leaves are wet.",
-                "step2": "Apply organic copper protectant and Bacillus bio-agent.",
-                "step3": "Sanitize tools between handling plants."
+                "tagline": "Xanthomonas bacterial pathogen. Recommend Copper + Bactericide combo.",
+                "step1": "Instruct farmer not to touch or prune plants when wet.",
+                "step2": "Dispense Blitox Copper Oxychloride (45g) + BactoStop (6g) per pump.",
+                "step3": "Add SilicaShield foliar booster for cell wall thickness."
             },
             "hi": {
-                "label": "टमाटर जीवाणु धब्बा (बैक्टीरियल स्पॉट)",
-                "tagline": "जीवाणु जनित रोग। पत्तियां गीली होने पर काम न करें।",
-                "step1": "ओस या बारिश में पौधों को न छुएं।",
-                "step2": "कॉपर युक्त जैविक दवा और नीम घोल का छिड़काव करें।",
-                "step3": "औजारों को सैनिटाइज रखें और संक्रमित पत्तियां हटाएं।"
+                "label": "टमाटर जीवाणु धब्बा (Bacterial Spot)",
+                "tagline": "जीवाणु जनित रोग। कॉपर ऑक्सीक्लोराइड + जीवाणुनाशी का मिश्रण दें।",
+                "step1": "किसान को सख्त हिदायत दें कि पत्तियां गीली होने पर खेत में काम न करे।",
+                "step2": "ब्लाइटॉक्स कॉपर (45g) + बैक्टोस्टॉप (6g) प्रति पंप का घोल तैयार कराएं।",
+                "step3": "पौधों की रोग प्रतिरोधक क्षमता बढ़ाने के लिए सिलिका टॉनिक दें।"
             },
             "kn": {
                 "label": "ಟೊಮೆಟೊ ಬ್ಯಾಕ್ಟೀರಿಯಾ ಚುಕ್ಕೆ ರೋಗ",
-                "tagline": "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಸೋಂಕು. ಎಲೆಗಳು ತೇವವಿರುವಾಗ ಕೆಲಸ ಮಾಡಬೇಡಿ.",
-                "step1": "ಇಬ್ಬನಿ ಅಥವಾ ಮಳೆ ಇರುವಾಗ ಗಿಡಗಳನ್ನು ಮುಟ್ಟಬೇಡಿ.",
-                "step2": "ತಾಮ್ರದ ಜೈವಿಕ ಕೀಟನಾಶಕ ಮತ್ತು ಬೇವು ದ್ರಾವಣ ಸಿಂಪಡಿಸಿ.",
-                "step3": "ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ ಮತ್ತು ಸೋಂಕಿತ ಎಲೆಗಳನ್ನು ತೆಗೆಯಿರಿ."
+                "tagline": "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಸೋಂಕು. ತಾಮ್ರದ ಆಕ್ಸಿಕ್ಲೋರೈಡ್ + ಬ್ಯಾಕ್ಟೀರಿಯಾನಾಶಕ ಕಾಂಬೋ ನೀಡಿ.",
+                "step1": "ಎಲೆಗಳು ತೇವವಿರುವಾಗ ಗಿಡಗಳನ್ನು ಮುಟ್ಟದಂತೆ ರೈತರಿಗೆ ಸೂಚಿಸಿ.",
+                "step2": "ಬ್ಲೈಟಾಕ್ಸ್ ಕಾಪರ್ (45g) + ಬ್ಯಾಕ್ಟೋಸ್ಟಾಪ್ (6g) ಪ್ರತಿ ಪಂಪಿಗೆ ಬೆರೆಸಿ ಕೊಡಿ.",
+                "step3": "ಗಿಡಗಳ ರಕ್ಷಣೆಗೆ ಸಿಲಿಕಾ ರಕ್ಷಾ ಕವಚ ಸ್ಪ್ರೇ ನೀಡಿ."
             },
             "te": {
                 "label": "టమోటా బ్యాక్టీరియల్ స్పాట్",
-                "tagline": "బాక్టీరియా వల్ల వచ్చే తెగులు. ఆకులు తడిగా ఉన్నప్పుడు పని చేయవద్దు.",
-                "step1": "మంచు లేదా వర్షం పడినప్పుడు మొక్కలను తాకవద్దు.",
-                "step2": "కాపర్ ఆధారిత బయో-స్ప్రే మరియు వేప నూనె చల్లండి.",
-                "step3": "ఉపకరణాలను శుభ్రంగా ఉంచుకోండి."
+                "tagline": "బాక్టీరియా తెగులు. కాపర్ ఆక్సిక్లోరైడ్ + బ్యాక్టీరిసైడ్ కాంబినేషన్ ఇవ్వండి.",
+                "step1": "ఆకులు తడిగా ఉన్నప్పుడు మొక్కలను తాకవద్దని రైతుకు చెప్పండి.",
+                "step2": "బ్లైటాక్స్ కాపర్ (45g) + బాక్టోస్టాప్ (6g) పంపునకు కలిపి పిచికారీ చేయించండి.",
+                "step3": "మొక్కల రోగనిరోధక శక్తికి సిలికా బయో-స్ప్రే అందించండి."
             }
         }
     },
@@ -206,20 +412,50 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "N/A",
             "severe": "N/A"
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-SEAWEED-TONIC",
+                "name": "Biozyme Seaweed Bio-Stimulant Tonic",
+                "brand": "Biostadt India",
+                "category": "Plant Growth Promoter",
+                "pack_size": "250 ml",
+                "mrp": 290,
+                "dealer_price": 195,
+                "margin_pct": 32.7,
+                "dosage": "30 ml per 15L Knapsack Pump (2 ml/L)",
+                "in_stock": 60,
+                "is_primary": True,
+                "usage_notes": "Stimulates chlorophyll density, root vigor, and abiotic stress resistance."
+            },
+            {
+                "sku_id": "SKU-MICRONUT-CHEL",
+                "name": "Multi-Micro Zinc-Boron-Iron Chelated Mix",
+                "brand": "KrishiBio Organics",
+                "category": "Micronutrient",
+                "pack_size": "500 gm",
+                "mrp": 240,
+                "dealer_price": 160,
+                "margin_pct": 33.3,
+                "dosage": "25 gm per 15L Pump",
+                "in_stock": 40,
+                "is_primary": True,
+                "usage_notes": "Prevents blossom end rot and enhances fruit setting."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "No remedial intervention required. The crop shows optimum physiological vitality.",
-                "Continue standard agronomic monitoring routine twice weekly."
+                "Reassure farmer: Zero pathogen damage detected! Do NOT sell unnecessary chemical sprays.",
+                "Encourage preventative crop nutrition and organic bio-stimulants."
             ],
             "organic_bio_treatments": [
-                "Apply prophylactic bio-stimulant (Seaweed extract 2ml/L) to strengthen leaf cuticle.",
-                "Maintain healthy rhizosphere with Vermicompost and mycorrhizal inoculation."
+                "Recommend Biozyme Seaweed Tonic + Chelated Micronutrients for maximum yield quality.",
+                "Maintain mycorrhiza soil colonization."
             ],
             "cultural_prevention": [
-                "Maintain uniform soil moisture using tensiometer or soil finger check.",
-                "Keep base mulched with paddy straw or organic residue to conserve soil biota."
+                "Keep mulch in place to conserve moisture.",
+                "Maintain scheduled weekly crop scouting."
             ],
-            "chemical_advisory": "Zero chemical sprays required. Conserve beneficial ladybird beetles and predatory mites."
+            "chemical_advisory": "ZERO chemical pesticide required. Avoid unnecessary chemical applications to save farmer money and protect beneficial insects."
         },
         "environmental_risk": {
             "temp_optimum": "18°C - 28°C",
@@ -229,153 +465,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Healthy Tomato Leaf",
-                "tagline": "Leaf is vibrant and pathogen-free. Maintain preventive care.",
-                "step1": "No intervention required. Crop is in good health.",
-                "step2": "Apply organic seaweed bio-stimulant for stress resilience.",
-                "step3": "Continue standard weekly monitoring."
+                "tagline": "No disease detected. Upsell preventive bio-stimulants & micronutrients.",
+                "step1": "Reassure farmer: leaf is healthy. Advise against chemical spraying.",
+                "step2": "Dispense Biozyme Seaweed Tonic (30ml/pump) for lush green growth.",
+                "step3": "Offer Chelated Micronutrients for fruit setting and higher market yield."
             },
             "hi": {
                 "label": "स्वस्थ टमाटर की पत्ती",
-                "tagline": "पत्ती पूरी तरह स्वस्थ और रोगमुक्त है। सामान्य देखभाल जारी रखें।",
-                "step1": "किसी रासायनिक छिड़काव की आवश्यकता नहीं है।",
-                "step2": "जैविक खाद और पोषण बनाए रखें।",
-                "step3": "नियमित निगरानी जारी रखें।"
+                "tagline": "कोई बीमारी नहीं। किसान को अनावश्यक कीटनाशक न बेचें, जैविक टॉनिक दें।",
+                "step1": "किसान को आश्वस्त करें कि फसल बिल्कुल स्वस्थ है।",
+                "step2": "बायोजाइम समुद्री शैवाल टॉनिक (30ml/पंप) दें जिससे फसल और चमकदार बने।",
+                "step3": "फूल और फल वृद्धि हेतु चिलेटेड माइक्रोन्यूट्रिएंट्स की सिफारिश करें।"
             },
             "kn": {
                 "label": "ಆರೋಗ್ಯಕರ ಟೊಮೆಟೊ ಎಲೆ",
-                "tagline": "ಎಲೆ ಸಂಪೂರ್ಣ ಆರೋಗ್ಯಕರವಾಗಿದೆ. ಸಾಮಾನ್ಯ ಆರೈಕೆ ಮುಂದುವರಿಸಿ.",
-                "step1": "ಯಾವುದೇ ರಾಸಾಯನಿಕ ಸಿಂಪಡಣೆ ಅಗತ್ಯವಿಲ್ಲ.",
-                "step2": "ಸಾವಯವ ಪೋಷಣೆ ಮತ್ತು ತೇವಾಂಶ ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
-                "step3": "ವಾರಕ್ಕೊಮ್ಮೆ ಪರಿಶೀಲನೆ ಮುಂದುವರಿಸಿ."
+                "tagline": "ಯಾವುದೇ ರೋಗವಿಲ್ಲ. ರಾಸಾಯನಿಕ ಬೇಡ, ಜೈವಿಕ ಟಾನಿಕ್ ಮತ್ತು ಪೋಷಕಾಂಶ ನೀಡಿ.",
+                "step1": "ರೈತರಿಗೆ ಧೈರ್ಯ ಹೇಳಿ: ಬೆಳೆ ಸಂಪೂರ್ಣ ಆರೋಗ್ಯಕರವಾಗಿದೆ.",
+                "step2": "ಸಾವಯವ ಸಮುದ್ರ ಪಾಚಿ ಟಾನಿಕ್ (30ml/ಪಂಪ್) ಶಿಫಾರಸು ಮಾಡಿ.",
+                "step3": "ಹೂವು-ಕಾಯಿ ಕಚ್ಚಲು ಸೂಕ್ಷ್ಮ ಪೋಷಕಾಂಶಗಳ ಮಿಶ್ರಣ ನೀಡಿ."
             },
             "te": {
                 "label": "ఆరోగ్యకరమైన టమోటా ఆకు",
-                "tagline": "ఆకు సంపూర్ణ ఆరోగ్యంగా ఉంది. సాధారణ రక్షణ కొనసాగించండి.",
-                "step1": "ఎలాంటి పురుగుమందులు పిచికారీ చేయవద్దు.",
-                "step2": "సేంద్రీయ ఎరువులతో పోషణ అందించండి.",
-                "step3": "వారం వారం పర్యవేక్షణ కొనసాగించండి."
-            }
-        }
-    },
-    "Potato___Early_Blight": {
-        "crop": "Potato",
-        "disease_name": "Early Blight",
-        "pathogen": "Alternaria solani",
-        "symptoms": "Dark brown, dry, leathery target-pattern spots with prominent concentric rings. Lower leaves turn chlorotic, shrivel, and droop along stems.",
-        "severity_thresholds": {
-            "mild": "Under 5% foliar lesions on bottom canopy.",
-            "moderate": "10-25% foliar loss, lesions expanding to middle canopy.",
-            "severe": "Severe early defoliation reducing tuber bulking."
-        },
-        "action_plan": {
-            "immediate_actions": [
-                "Prune infected lower potato foliage early morning.",
-                "Avoid overhead irrigation during tuber bulking phase."
-            ],
-            "organic_bio_treatments": [
-                "Apply cold-pressed Neem bio-extract (5ml/L) + Trichoderma viride.",
-                "Foliar bio-zinc and bio-potash to support cell wall lignification."
-            ],
-            "cultural_prevention": [
-                "Maintain balanced soil nutrition; avoid nitrogen deficiency which predisposes older foliage to Alternaria.",
-                "Hilling up ridge soil around tubers to prevent spore wash-down onto developing tubers."
-            ],
-            "chemical_advisory": "Contact bio-fungicides preferred. Synthetic options (Chlorothalonil) only if regional agro-meteorological advisories flag high risk."
-        },
-        "environmental_risk": {
-            "temp_optimum": "24°C - 30°C",
-            "humidity_threshold": "> 75% RH",
-            "critical_leaf_wetness": "Alternating wet and dry periods"
-        },
-        "translations": {
-            "en": {
-                "label": "Potato Early Blight",
-                "tagline": "Concentric fungal spots detected. Begin organic foliar protection.",
-                "step1": "Prune infected lower foliage immediately.",
-                "step2": "Spray neem bio-extract and Trichoderma viride.",
-                "step3": "Ridge soil properly to protect developing tubers."
-            },
-            "hi": {
-                "label": "आलू अगेती झुलसा",
-                "tagline": "फफूंद के छल्लेदार धब्बे पाए गए। जैविक उपचार शुरू करें।",
-                "step1": "रोगग्रस्त निचली पत्तियों को तुरंत हटा दें।",
-                "step2": "नीम तेल और ट्राइकोडर्मा का छिड़काव करें।",
-                "step3": "कंदों पर अच्छी तरह मिट्टी चढ़ाएं ताकि सुरक्षा बनी रहे।"
-            },
-            "kn": {
-                "label": "ಆಲೂಗಡ್ಡೆ ಅರ್ಲಿ ಬ್ಲೈಟ್",
-                "tagline": "ಶಿಲೀಂಧ್ರ ಚುಕ್ಕೆಗಳು ಪತ್ತೆಯಾಗಿವೆ. ಜೈವಿಕ ನಿಯಂತ್ರಣ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ.",
-                "step1": "ಸೋಂಕಿತ ಕೆಳಗಿನ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ಕತ್ತರಿಸಿ.",
-                "step2": "ಬೇವಿನ ಎಣ್ಣೆ ಮತ್ತು ಟ್ರೈಕೋಡರ್ಮಾ ಸಿಂಪಡಿಸಿ.",
-                "step3": "ಗೆಡ್ಡೆಗಳಿಗೆ ಮಣ್ಣನ್ನು ಸರಿಯಾಗಿ ಮುಚ್ಚಿ."
-            },
-            "te": {
-                "label": "బంగాళాదుంప ఎర్లీ బ్లైట్",
-                "tagline": "శిలీంధ్ర తెగులు గుర్తించబడింది. సేంద్రీయ పిచికారీ ప్రారంభించండి.",
-                "step1": "తెగులు సోకిన క్రింది ఆకులను కత్తిరించండి.",
-                "step2": "వేప నూనె మరియు ట్రైకోడెర్మా పిచికారీ చేయండి.",
-                "step3": "దుంపలపై మట్టిని బాగా ఎగదోయండి."
-            }
-        }
-    },
-    "Potato___Late_Blight": {
-        "crop": "Potato",
-        "disease_name": "Late Blight",
-        "pathogen": "Phytophthora infestans",
-        "symptoms": "Water-soaked dark lesions spreading rapidly across foliage and stems; white mold layer under leaves during humid weather.",
-        "severity_thresholds": {
-            "mild": "Isolated dark water spots on terminal leaves.",
-            "moderate": "Fast spreading stem rot and dark foliar blotches.",
-            "severe": "Canopy collapse within 48-72 hours, tuber rot risk."
-        },
-        "action_plan": {
-            "immediate_actions": [
-                "Dehaulm (cut foliage off at ground level) 10-14 days before harvest if late blight threatens tubers.",
-                "Destroy infected haulms immediately away from the potato plot."
-            ],
-            "organic_bio_treatments": [
-                "Spray bio-certified Bordeaux mixture (1%) or Copper Oxychloride.",
-                "Bio-formulation of Bacillus subtilis QST 713."
-            ],
-            "cultural_prevention": [
-                "Plant certified disease-free seed tubers.",
-                "Select resistant potato cultivars suited for local agro-climatic zones."
-            ],
-            "chemical_advisory": "Cymoxanil + Mancozeb or Dimethomorph if rapid field epidemic threatens entire community yield."
-        },
-        "environmental_risk": {
-            "temp_optimum": "12°C - 20°C",
-            "humidity_threshold": "> 90% RH",
-            "critical_leaf_wetness": "Persistent mist or fog"
-        },
-        "translations": {
-            "en": {
-                "label": "Potato Late Blight",
-                "tagline": "Severe blight detected. Protect tuber crop immediately.",
-                "step1": "Dehaulm or remove blighted foliage without delay.",
-                "step2": "Apply Bordeaux mixture or copper bio-spray.",
-                "step3": "Ensure soil mounds cover tubers completely."
-            },
-            "hi": {
-                "label": "आलू पछेती झुलसा",
-                "tagline": "गंभीर झुलसा रोग। कंदों को सुरक्षित रखने के लिए तुरंत कदम उठाएं।",
-                "step1": "संक्रमित पत्तों को तुरंत काटें और खेत से बाहर करें।",
-                "step2": "बोर्डो मिश्रण का सुरक्षात्मक छिड़काव करें।",
-                "step3": "आलू के कंदों पर अच्छी मिट्टी ढकी रखें।"
-            },
-            "kn": {
-                "label": "ಆಲೂಗಡ್ಡೆ ಲೇಟ್ ಬ್ಲೈಟ್",
-                "tagline": "ತೀವ್ರ ರೋಗ ಪತ್ತೆಯಾಗಿದೆ. ಆಲೂಗೆಡ್ಡೆ ಬೆಳೆ ರಕ್ಷಣೆಗೆ ತಕ್ಷಣ ಕ್ರಮ.",
-                "step1": "ಸೋಂಕಿತ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ತೆಗೆದುಹಾಕಿ.",
-                "step2": "ಬೋರ್ಡೋ ಮಿಶ್ರಣ ಸಿಂಪಡಿಸಿ.",
-                "step3": "ಗೆಡ್ಡೆಗಳು ಹೊರಬರದಂತೆ ಮಣ್ಣು ಮುಚ್ಚಿ."
-            },
-            "te": {
-                "label": "బంగాళాదుంప లేట్ బ్లైట్",
-                "tagline": "తీవ్రమైన తెగులు. దుంపలను కాపాడేందుకు చర్యలు చేపట్టండి.",
-                "step1": "తెగులు సోకిన కొమ్మలను తొలగించండి.",
-                "step2": "బోర్డో మిశ్రమాన్ని పిచికారీ చేయండి.",
-                "step3": "దుంపలపై మట్టి సమృద్ధిగా ఉండేలా చూసుకోండి."
+                "tagline": "తెగుళ్లు లేవు. రసాయనాలు ఇవ్వవద్దు, సేంద్రీయ టానిక్ అందించండి.",
+                "step1": "ఆకు ఆరోగ్యంగా ఉందని రైతుకు భరోసా ఇవ్వండి.",
+                "step2": "బయో-టోనిక్ (30ml/పంప్) ఇచ్చి మంచి ఎదుగుదలకు సూచించండి.",
+                "step3": "పూత, కాత రాలకుండా మైక్రోన్యూట్రియెంట్స్ కాంబో అందించండి."
             }
         }
     },
@@ -389,21 +503,48 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "Pustules coalescing, leaf tips chlorotic.",
             "severe": "Extensive chlorosis, early grain fill impairment."
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-SULFUR-80",
+                "name": "Sulfex Bio-Sulfur 80% WDG (Fungicide + Acaricide)",
+                "brand": "Excel Crop Care",
+                "category": "Bio-Allowed Fungicide",
+                "pack_size": "1 kg",
+                "mrp": 230,
+                "dealer_price": 165,
+                "margin_pct": 28.3,
+                "dosage": "40 gm per 15L Knapsack Pump (2.5 gm/L)",
+                "in_stock": 48,
+                "is_primary": True,
+                "usage_notes": "Sustained vapor action destroys rust spore germination tubes. Also provides plant sulfur nutrition."
+            },
+            {
+                "sku_id": "SKU-AZOXY-TEBU",
+                "name": "Custodia Azoxystrobin 11% + Tebuconazole 18.3% SC",
+                "brand": "ADAMA India",
+                "category": "Broad Spectrum Systemic",
+                "pack_size": "250 ml",
+                "mrp": 780,
+                "dealer_price": 610,
+                "margin_pct": 21.8,
+                "dosage": "20 ml per 15L Pump",
+                "in_stock": 16,
+                "is_primary": False,
+                "usage_notes": "Premium curative systemic for high-value sweet corn / seed plots if rust crosses 20% canopy."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "Monitor spore density weekly on upper leaf canopy.",
-                "Avoid unnecessary leaf injury during hoeing or fertilizer banding."
+                "Instruct farmer to check cob level leaves (leaves 8-12) to assess grain fill risk."
             ],
             "organic_bio_treatments": [
-                "Spray wettable sulfur bio-formulation (2.5g/L water).",
-                "Neem seed kernel extract (NSKE 5%) foliar spray.",
-                "Ampelomyces quisqualis bio-parasitic fungus spray against rust spores."
+                "Dispense Sulfex 80% WDG micronized sulfur bio-spray.",
+                "Combine with Cold-pressed Neem extract for pustule dessication."
             ],
             "cultural_prevention": [
-                "Plant rust-tolerant hybrid seeds recommended by regional agricultural university.",
-                "Early planting in season to avoid peak air-borne spore clouds."
+                "Ensure balanced potash application; avoid excess urea."
             ],
-            "chemical_advisory": "Fungicide (Azoxystrobin or Tebuconazole) only justified if rust appears prior to tasseling and weather favors disease."
+            "chemical_advisory": "Azoxystrobin + Tebuconazole recommended only if rust appears prior to silking stage."
         },
         "environmental_risk": {
             "temp_optimum": "16°C - 25°C",
@@ -413,31 +554,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Corn Common Rust",
-                "tagline": "Powdery rust pustules detected on corn blades.",
-                "step1": "Apply wettable sulfur or neem kernel extract spray.",
-                "step2": "Monitor upper canopy leaves near ear level.",
-                "step3": "Select rust-resistant hybrids for next cycle."
+                "tagline": "Puccinia rust pustules detected. Dispense Sulfex 80% WDG bio-spray.",
+                "step1": "Sell Sulfex Bio-Sulfur (40g/pump) to stop fungal spore spread.",
+                "step2": "Advise farmer to inspect upper leaves near corn cob.",
+                "step3": "Recommend balanced potash to strengthen stalk and blade tissue."
             },
             "hi": {
-                "label": "मक्का का सामान्य रतुआ (कॉमन रस्ट)",
-                "tagline": "मक्के की पत्तियों पर भूरे-नारंगी फफोले दिखे हैं।",
-                "step1": "घुलनशील सल्फर या नीम अर्क (5%) का छिड़काव करें।",
-                "step2": "भुट्टे के पास वाले ऊपरी पत्तों पर विशेष नजर रखें।",
-                "step3": "अगली बुवाई में रोगरोधी किस्मों का चयन करें।"
+                "label": "मक्का सामान्य रतुआ (Common Rust)",
+                "tagline": "पत्तियों पर रतुआ के फफोले। सल्फैक्स 80% घुलनशील सल्फर दें।",
+                "step1": "सल्फैक्स सल्फर 80% डब्लूडीजी (40 ग्राम/पंप) की सिफारिश करें।",
+                "step2": "भुट्टे के पास वाले ऊपरी पत्तों पर विशेष निगरानी रखने को कहें।",
+                "step3": "पोटाश खाद का प्रयोग बढ़ाएं जिससे पत्तियां मजबूत रहें।"
             },
             "kn": {
                 "label": "ಮೆಕ್ಕೆಜೋಳದ ಸಾಮಾನ್ಯ ತುಕ್ಕು ರೋಗ",
-                "tagline": "ಮೆಕ್ಕೆಜೋಳದ ಎಲೆಗಳ ಮೇಲೆ ತುಕ್ಕು ಬಣ್ಣದ ಕಲೆಗಳು ಪತ್ತೆಯಾಗಿವೆ.",
-                "step1": "ಕರಗುವ ಗಂಧಕ (ಸಲ್ಫರ್) ಅಥವಾ ಬೇವಿನ ಕಷಾಯ ಸಿಂಪಡಿಸಿ.",
-                "step2": "ತೆನೆಯ ಸಮೀಪವಿರುವ ಎಲೆಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ.",
-                "step3": "ಮುಂದಿನ ಋತುವಿನಲ್ಲಿ ರೋಗನಿರೋಧಕ ತಳಿಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+                "tagline": "ಮೆಕ್ಕೆಜೋಳದ ತುಕ್ಕು ರೋಗ. ಸಲ್ಫೆಕ್ಸ್ 80% ಜೈವಿಕ ಗಂಧಕ ನೀಡಿ.",
+                "step1": "ಸಲ್ಫೆಕ್ಸ್ 80% ಗಂಧಕ (40 ಗ್ರಾಂ/ಪಂಪ್) ಸಿಂಪಡಿಸಲು ಕೊಡಿ.",
+                "step2": "ತೆನೆಯ ಸಮೀಪವಿರುವ ಮೇಲಿನ ಎಲೆಗಳನ್ನು ಪರೀಕ್ಷಿಸಲು ತಿಳಿಸಿ.",
+                "step3": "ಕಾಂಡ ಮತ್ತು ಎಲೆ ಗಟ್ಟಿಯಾಗಲು ಪೊಟ್ಯಾಷ್ ರಸಗೊಬ್ಬರ ನೀಡಿ."
             },
             "te": {
                 "label": "మొక్కజొన్న సాధారణ తుప్పు తెగులు",
-                "tagline": "మొక్కజొన్న ఆకులపై తుప్పు మచ్చలు కనిపించాయి.",
-                "step1": "నీటిలో కరిగే గంధకం లేదా వేప కషాయం పిచికారీ చేయండి.",
-                "step2": "కంకి వద్ద ఉన్న ఆకులను జాగ్రత్తగా గమనించండి.",
-                "step3": "తదుపరి పంటకు తెగులు నిరోధక రకాలను ఎంచుకోండి."
+                "tagline": "ఆకులపై తుప్పు మచ్చలు. సల్ఫెక్స్ 80% సల్ఫర్ బయో-స్ప్రే ఇవ్వండి.",
+                "step1": "సల్ఫెక్స్ 80% సల్ఫర్ (40 గ్రా/పంప్) పిచికారీ చేయడానికి ఇవ్వండి.",
+                "step2": "కంకి వద్ద ఉన్న ఆకులను జాగ్రత్తగా గమనించమని చెప్పండి.",
+                "step3": "ఆకు దృఢత్వానికి పొటాష్ ఎరువును అందించండి."
             }
         }
     },
@@ -451,21 +592,62 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
             "moderate": "Lesions merging, leaf tip blighting.",
             "severe": "Neck rot risk, severe panicle empty grain loss."
         },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-PSEUDO-FL",
+                "name": "Bio-Fluo (Pseudomonas fluorescens 1.5% WP)",
+                "brand": "GreenCrop Biotech",
+                "category": "Bio-Bactericide / Fungicide",
+                "pack_size": "1 kg",
+                "mrp": 240,
+                "dealer_price": 160,
+                "margin_pct": 33.3,
+                "dosage": "50 gm per 15L Knapsack Pump",
+                "in_stock": 38,
+                "is_primary": True,
+                "usage_notes": "Produces phenazine antibiotics that stop blast germination. Induces systemic acquired resistance (SAR)."
+            },
+            {
+                "sku_id": "SKU-TRICYCLAZOLE",
+                "name": "Baan Tricyclazole 75% WP",
+                "brand": "Indofil Industries",
+                "category": "Melanin Biosynthesis Inhibitor",
+                "pack_size": "250 gm",
+                "mrp": 460,
+                "dealer_price": 365,
+                "margin_pct": 20.7,
+                "dosage": "18 gm per 15L Pump (1.2 gm/L)",
+                "in_stock": 25,
+                "is_primary": False,
+                "usage_notes": "High specificity blast curative. Dispense if neck blast threatens at booting stage."
+            },
+            {
+                "sku_id": "SKU-BIO-POTASH",
+                "name": "K-Mobilizer Bio-Potash Solubilizing Bacteria",
+                "brand": "KrishiBio Organics",
+                "category": "Bio-Fertilizer",
+                "pack_size": "500 ml",
+                "mrp": 280,
+                "dealer_price": 185,
+                "margin_pct": 33.9,
+                "dosage": "30 ml per 15L Pump",
+                "in_stock": 20,
+                "is_primary": True,
+                "usage_notes": "Enhances silicon & potassium uptake to harden paddy leaf sheath."
+            }
+        ],
         "action_plan": {
             "immediate_actions": [
-                "Avoid split overdoses of synthetic nitrogenous fertilizers (excess urea boosts blast susceptibility).",
-                "Maintain continuous thin standing water layer in paddy basins."
+                "CRITICAL ADVICE: Instruct farmer to immediately STOP excess urea / nitrogenous fertilizer application (excess N promotes blast)."
             ],
             "organic_bio_treatments": [
-                "Pseudomonas fluorescens bio-agent (10g/kg seed treatment & 5g/L foliar spray).",
-                "Panchagavya (3%) or fermented butter-milk aqueous bio-spray.",
-                "Bio-silica supplement (Diatomaceous earth extract) to harden leaf epidermis."
+                "Dispense Pseudomonas fluorescens bio-agent + Bio-Potash combo.",
+                "Foliar bio-silicon formulation to harden cell wall against fungus appressoria."
             ],
             "cultural_prevention": [
-                "Treat paddy seeds before nursery sowing.",
-                "Maintain clean bunds free of weed grass hosts (Echinochloa spp.)."
+                "Maintain uniform thin standing water layer in paddy basins."
             ],
-            "chemical_advisory": "Tricyclazole 75% WP or Isoprothiolane at neck emergence stage only if threshold crosses 5-10%."
+            "chemical_advisory": "Dispense Tricyclazole 75% WP at panicle emergence if weather shows continuous night mist and blast covers >5% leaf area."
         },
         "environmental_risk": {
             "temp_optimum": "20°C - 26°C",
@@ -475,31 +657,31 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
         "translations": {
             "en": {
                 "label": "Paddy Rice Blast",
-                "tagline": "Spindle lesion fungal blast detected. Halt excess nitrogen fertilizer.",
-                "step1": "Stop excess urea application immediately.",
-                "step2": "Foliar spray Pseudomonas fluorescens bio-agent (5g/L).",
-                "step3": "Maintain water table in the basin."
+                "tagline": "Magnaporthe blast detected. Dispense Pseudomonas bio-agent + stop excess urea.",
+                "step1": "URGENT: Advise farmer to immediately stop top-dressing urea/nitrogen.",
+                "step2": "Dispense Pseudomonas fluorescens Bio-Agent (50g/pump) for blast containment.",
+                "step3": "Provide Bio-Potash to harden leaf sheath and prevent neck blast."
             },
             "hi": {
-                "label": "धान का झोंका रोग (राइस ब्लास्ट)",
-                "tagline": "पत्तियों पर आंख जैसे धब्बे दिखे हैं। यूरिया का अधिक प्रयोग तुरंत रोकें।",
-                "step1": "यूरिया खाद का अत्यधिक उपयोग तुरंत बंद करें।",
-                "step2": "स्यूडोमोनास फ्लोरेसेंस (5 ग्राम/लीटर) का छिड़काव करें।",
-                "step3": "खेत में उचित नमी और जल स्तर बनाए रखें।"
+                "label": "धान का झोंका रोग (Rice Blast)",
+                "tagline": "राइस ब्लास्ट फफूंद। स्यूडोमोनास जैविक दवा दें और यूरिया तुरंत बंद कराएं।",
+                "step1": "किसान से तुरंत कहें कि यूरिया खाद का छिड़काव बिल्कुल रोक दे।",
+                "step2": "स्यूडोमोनास फ्लोरेसेंस जैविक पाउडर (50 ग्राम/पंप) की बिक्री करें।",
+                "step3": "पत्ती की परत को मजबूत करने के लिए बायो-पोटाश घोल दें।"
             },
             "kn": {
-                "label": "ಭತ್ತದ ಬೆಂಕಿ ರೋಗ (ರೈಸ್ ಬ್ಲಾಸ್ಟ್)",
-                "tagline": "ಎಲೆಗಳ ಮೇಲೆ ಕಣ್ಣಿನಾಕಾರದ ಕಲೆಗಳು ಪತ್ತೆಯಾಗಿವೆ. ಯೂರಿಯಾ ಬಳಕೆಯನ್ನು ನಿಲ್ಲಿಸಿ.",
-                "step1": "ಹೆಚ್ಚುವರಿ ಯೂರಿಯಾ ರಸಗೊಬ್ಬರ ಕೊಡುವುದನ್ನು ಕೂಡಲೇ ನಿಲ್ಲಿಸಿ.",
-                "step2": "ಸ್ಯೂಡೋಮೊನಾಸ್ ಫ್ಲೋರೆಸೆನ್ಸ್ ಜೈವಿಕ ದ್ರಾವಣ ಸಿಂಪಡಿಸಿ.",
-                "step3": "ಗದ್ದೆಯಲ್ಲಿ ಸೂಕ್ತ ನೀರಿನ ಮಟ್ಟವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+                "label": "ಭತ್ತದ ಬೆಂಕಿ ರೋಗ (Rice Blast)",
+                "tagline": "ಭತ್ತದ ಬೆಂಕಿ ರೋಗ ಪತ್ತೆ. ಸ್ಯುಡೋಮೊನಾಸ್ ನೀಡಿ ಮತ್ತು ಯೂರಿಯಾ ನಿಲ್ಲಿಸಲು ತಿಳಿಸಿ.",
+                "step1": "ಹೆಚ್ಚುವರಿ ಯೂರಿಯಾ ಗೊಬ್ಬರ ಕೊಡುವುದನ್ನು ತಕ್ಷಣ ನಿಲ್ಲಿಸಲು ತಿಳಿಸಿ.",
+                "step2": "ಸ್ಯುಡೋಮೊನಾಸ್ ಫ್ಲೋರೆಸೆನ್ಸ್ ಜೈವಿಕ ಪುಡಿ (50 ಗ್ರಾಂ/ಪಂಪ್) ಸಿಂಪಡಿಸಲು ಕೊಡಿ.",
+                "step3": "ಎಲೆ ರಕ್ಷಣೆಗೆ ಜೈವಿಕ ಪೊಟ್ಯಾಷ್ ದ್ರಾವಣ ನೀಡಿ."
             },
             "te": {
-                "label": "వరి అగ్గి తెగులు (రైస్ బ్లాస్ట్)",
-                "tagline": "ఆకులపై కంటి ఆకారపు మచ్చలు కనిపించాయి. యూరియా వాడకాన్ని తగ్గించండి.",
-                "step1": "అదనపు యూరియా ఎరువుల వాడకాన్ని వెంటనే ఆపండి.",
-                "step2": "సూడోమోనాస్ ఫ్లోరోసెన్స్ బయో-స్ప్రే (5 గ్రా/లీ) పిచికారీ చేయండి.",
-                "step3": "పొలంలో తగినంత నీటి మట్టాన్ని నిర్వహించండి."
+                "label": "వరి అగ్గి తెగులు (Rice Blast)",
+                "tagline": "వరి అగ్గి తెగులు. సూడోమోనాస్ బయో-మందు ఇవ్వండి, యూరియా ఆపండి.",
+                "step1": "యూరియా ఎరువు వాడకాన్ని వెంటనే ఆపమని రైతుకు గట్టిగా చెప్పండి.",
+                "step2": "సూడోమోనాస్ ఫ్లోరోసెన్స్ బయో-పౌడర్ (50 గ్రా/పంప్) ఇవ్వండి.",
+                "step3": "ఆకు దృఢత్వానికి బయో-పొటాష్ లిక్విడ్ అందించండి."
             }
         }
     }
