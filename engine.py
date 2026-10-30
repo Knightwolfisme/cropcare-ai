@@ -339,8 +339,14 @@ def run_edge_inference(
     if metadata_hint and metadata_hint in DISEASE_DATABASE:
         scores[metadata_hint] = max(scores.get(metadata_hint, 0.5), 4.5 + np.random.uniform(0.1, 0.5))
 
-    # Softmax normalization for probabilistic distribution
-    raw_keys = list(scores.keys())
+    # Filter to only classes registered in DISEASE_DATABASE to prevent KeyErrors
+    valid_keys = [k for k in scores.keys() if k in DISEASE_DATABASE]
+    if not valid_keys:
+        valid_keys = list(DISEASE_DATABASE.keys())
+        for k in valid_keys:
+            scores[k] = 1.0
+
+    raw_keys = valid_keys
     raw_vals = np.array([scores[k] for k in raw_keys], dtype=np.float32)
     exp_vals = np.exp(raw_vals - np.max(raw_vals))  # numerically stable softmax
     prob_dist = exp_vals / np.sum(exp_vals)
@@ -352,10 +358,15 @@ def run_edge_inference(
     # Build ranked predictions
     ranked_predictions = []
     for idx in top_indices[:4]:
+        c_key = raw_keys[idx]
+        d_entry = DISEASE_DATABASE.get(c_key, {
+            "crop": c_key.split("___")[0],
+            "disease_name": c_key.split("___")[-1].replace("_", " ")
+        })
         ranked_predictions.append({
-            "class_key": raw_keys[idx],
-            "crop": DISEASE_DATABASE[raw_keys[idx]]["crop"],
-            "disease_name": DISEASE_DATABASE[raw_keys[idx]]["disease_name"],
+            "class_key": c_key,
+            "crop": d_entry.get("crop", "Crop"),
+            "disease_name": d_entry.get("disease_name", c_key),
             "confidence": float(prob_dist[idx]),
             "confidence_pct": round(float(prob_dist[idx]) * 100, 1)
         })

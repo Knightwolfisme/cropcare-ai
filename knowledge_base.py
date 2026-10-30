@@ -684,6 +684,170 @@ DISEASE_DATABASE: Dict[str, Dict[str, Any]] = {
                 "step3": "ఆకు దృఢత్వానికి బయో-పొటాష్ లిక్విడ్ అందించండి."
             }
         }
+    },
+    "Potato___Early_Blight": {
+        "crop": "Potato",
+        "disease_name": "Early Blight",
+        "pathogen": "Alternaria solani",
+        "symptoms": "Dark brown, dry, leathery target-pattern spots with concentric rings. Lower foliage yellowing and tuber bulking impairment.",
+        "severity_thresholds": {
+            "mild": "Under 5% foliar lesions on bottom canopy.",
+            "moderate": "10-25% foliar loss, lesions expanding to middle canopy.",
+            "severe": "Severe early defoliation reducing tuber bulking."
+        },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-POTATO-NEEM",
+                "name": "EcoShield Neem Gold 10,000 PPM",
+                "brand": "KrishiBio Organics",
+                "category": "Bio-Pesticide",
+                "pack_size": "250 ml",
+                "mrp": 280,
+                "dealer_price": 195,
+                "margin_pct": 30.3,
+                "dosage": "35 ml per 15L Knapsack Pump",
+                "in_stock": 35,
+                "is_primary": True,
+                "usage_notes": "Essential early morning spray. Protects lower leaves and prevents tuber spore transmission."
+            },
+            {
+                "sku_id": "SKU-POTATO-TRICHO",
+                "name": "Tricho-Care Bio-Fungicide (Trichoderma viride 1% WP)",
+                "brand": "GreenCrop Biotech",
+                "category": "Bio-Control Agent",
+                "pack_size": "500 gm",
+                "mrp": 210,
+                "dealer_price": 140,
+                "margin_pct": 33.3,
+                "dosage": "50 gm per 15L Knapsack Pump",
+                "in_stock": 25,
+                "is_primary": True,
+                "usage_notes": "Outcompetes Alternaria mycelium and fortifies root rhizosphere."
+            }
+        ],
+        "action_plan": {
+            "immediate_actions": ["Advise pruning infected lower potato leaves and ridging soil high over developing tubers."],
+            "organic_bio_treatments": ["Dispense EcoShield Neem + Tricho-Care bio-fungicide combo."],
+            "cultural_prevention": ["Avoid excessive overhead irrigation; keep furrow lines clean."],
+            "chemical_advisory": "Mancozeb 75% WP or Chlorothalonil only if disease covers >20% foliage during tuberization."
+        },
+        "environmental_risk": {
+            "temp_optimum": "24°C - 30°C",
+            "humidity_threshold": "> 75% RH",
+            "critical_leaf_wetness": "Alternating wet and dry periods"
+        },
+        "translations": {
+            "en": {
+                "label": "Potato Early Blight",
+                "tagline": "Alternaria spots detected. Dispense Neem Gold + Trichoderma bundle.",
+                "step1": "Prune infected lower foliage immediately.",
+                "step2": "Dispense EcoShield Neem Gold (35ml/pump) + Tricho-Care WP.",
+                "step3": "Ridge soil high to protect developing tubers from spore wash-off."
+            },
+            "hi": {
+                "label": "आलू अगेती झुलसा (Early Blight)",
+                "tagline": "आलू की पत्तियों पर छल्लेदार धब्बे। नीम तेल + ट्राइकोडर्मा का कॉम्बो दें।",
+                "step1": "रोगी पत्तियों को तुरंत काटकर खेत से दूर नष्ट कराएं।",
+                "step2": "नीम तेल (35ml/पंप) + ट्राइको-केयर जैविक कवकनाशी का छिड़काव कराएं।",
+                "step3": "आलू के कंदों पर अच्छी मिट्टी चढ़ाएं ताकि सुरक्षा बनी रहे।"
+            },
+            "kn": {
+                "label": "ಆಲೂಗಡ್ಡೆ ಮುಂಗಾರು ರೋಗ (Early Blight)",
+                "tagline": "ಆಲೂಗಡ್ಡೆಯಲ್ಲಿ ಚುಕ್ಕೆ ರೋಗ. ಬೇವಿನ ಎಣ್ಣೆ + ಟ್ರೈಕೋಡರ್ಮಾ ನೀಡಿ.",
+                "step1": "ಸೋಂಕಿತ ಕೆಳಗಿನ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ಕತ್ತರಿಸಿ.",
+                "step2": "ಬೇವಿನ ಎಣ್ಣೆ ಮತ್ತು ಟ್ರೈಕೋಡರ್ಮಾ ದ್ರಾವಣ ಸಿಂಪಡಿಸಲು ಕೊಡಿ.",
+                "step3": "ಗೆಡ್ಡೆಗಳಿಗೆ ಮಣ್ಣನ್ನು ಸರಿಯಾಗಿ ಮುಚ್ಚಲು ತಿಳಿಸಿ."
+            },
+            "te": {
+                "label": "బంగాళాదుంప ఎర్లీ బ్లైట్",
+                "tagline": "ఆకులపై వలయాకార మచ్చలు. వేప నూనె + ట్రైకోడెర్మా కాంబో ఇవ్వండి.",
+                "step1": "తెగులు సోకిన ఆకులను కత్తిరించి కాల్చండి.",
+                "step2": "వేప నూనె + ట్రైకో-కేర్ బయో-స్ప్రే పిచికారీ చేయించండి.",
+                "step3": "దుంపలపై మట్టి సమృద్ధిగా ఉండేలా చూడండి."
+            }
+        }
+    },
+    "Potato___Late_Blight": {
+        "crop": "Potato",
+        "disease_name": "Late Blight",
+        "pathogen": "Phytophthora infestans",
+        "symptoms": "Water-soaked dark lesions spreading rapidly across foliage and stems; white downy mold under humid conditions. High tuber rot risk.",
+        "severity_thresholds": {
+            "mild": "Isolated dark water spots on terminal leaves.",
+            "moderate": "Fast spreading stem rot and dark foliar blotches.",
+            "severe": "Canopy collapse within 48-72 hours, tuber rot risk."
+        },
+        "retail_inventory": [
+            {
+                "sku_id": "SKU-POTATO-COPPER",
+                "name": "Kocide Bio-Shield Copper Hydroxide 53.8% DF",
+                "brand": "DuPont / Corteva",
+                "category": "Bio-Approved Fungicide",
+                "pack_size": "250 gm",
+                "mrp": 380,
+                "dealer_price": 275,
+                "margin_pct": 27.6,
+                "dosage": "35 gm per 15L Knapsack Pump",
+                "in_stock": 20,
+                "is_primary": True,
+                "usage_notes": "Potent copper protectant preventing tuber rot and sporulation."
+            },
+            {
+                "sku_id": "SKU-POTATO-CURZATE",
+                "name": "Curzate Cymoxanil 8% + Mancozeb 64% WP",
+                "brand": "AgroChem India",
+                "category": "Systemic Curative",
+                "pack_size": "500 gm",
+                "mrp": 590,
+                "dealer_price": 460,
+                "margin_pct": 22.0,
+                "dosage": "35 gm per 15L Pump",
+                "in_stock": 15,
+                "is_primary": False,
+                "usage_notes": "High emergency systemic if field collapse is imminent."
+            }
+        ],
+        "action_plan": {
+            "immediate_actions": ["Dehaulm (cut haulms at ground level) 10-14 days before harvest if late blight threatens tubers."],
+            "organic_bio_treatments": ["Dispense Kocide Copper Bio-Shield or Bordeaux mixture 1%."],
+            "cultural_prevention": ["Hill up ridges to create deep protective soil cover over potato tubers."],
+            "chemical_advisory": "Cymoxanil + Mancozeb systemic formulation if cold wet weather epidemic is active."
+        },
+        "environmental_risk": {
+            "temp_optimum": "12°C - 20°C",
+            "humidity_threshold": "> 90% RH",
+            "critical_leaf_wetness": "Persistent mist or fog"
+        },
+        "translations": {
+            "en": {
+                "label": "Potato Late Blight",
+                "tagline": "Phytophthora blight detected. Dispense Kocide Copper Protectant immediately.",
+                "step1": "Dehaulm or cut blighted foliage to save developing tubers.",
+                "step2": "Dispense Kocide Copper Bio-Shield (35g/pump) without delay.",
+                "step3": "Ensure soil mounds cover tubers completely."
+            },
+            "hi": {
+                "label": "आलू पछेती झुलसा (Late Blight)",
+                "tagline": "गंभीर झुलसा रोग। कंदों को सड़ने से बचाने के लिए तुरंत कोसाइड कॉपर दें।",
+                "step1": "संक्रमित पत्तों को तुरंत काटें और खेत से बाहर करें।",
+                "step2": "कोसाइड कॉपर कवकनाशी (35 ग्राम/पंप) का तुरंत छिड़काव कराएं।",
+                "step3": "कंदों को मिट्टी से अच्छी तरह ढक कर रखें।"
+            },
+            "kn": {
+                "label": "ಆಲೂಗಡ್ಡೆ ತಡವಾದ ರೋಗ (Late Blight)",
+                "tagline": "ತೀವ್ರ ರೋಗ. ಗೆಡ್ಡೆಗಳನ್ನು ಉಳಿಸಲು ತಾಮ್ರದ ಕೀಟನಾಶಕ ಕೊಡಿ.",
+                "step1": "ಸೋಂಕಿತ ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ತೆಗೆದುಹಾಕಿ.",
+                "step2": "ತಾಮ್ರದ ಜೈವಿಕ ಕೀಟನಾಶಕ ಸಿಂಪಡಿಸಲು ತಿಳಿಸಿ.",
+                "step3": "ಗೆಡ್ಡೆಗಳು ಹೊರಬರದಂತೆ ಮಣ್ಣು ಮುಚ್ಚಿ."
+            },
+            "te": {
+                "label": "బంగాళాదుంప లేట్ బ్లైట్",
+                "tagline": "తీవ్రమైన తెగులు. దుంపలను కాపాడేందుకు కాపర్ బయో-షీల్డ్ ఇవ్వండి.",
+                "step1": "తెగులు సోకిన కొమ్మలను వెంటనే తొలగించండి.",
+                "step2": "కాపర్ బయో-స్ప్రే (35 గ్రా/పంప్) పిచికారీ చేయించండి.",
+                "step3": "దుంపలపై మట్టి బాగా కప్పండి."
+            }
+        }
     }
 }
 
