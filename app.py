@@ -362,6 +362,70 @@ def load_sample_image(filename: str, hint_key: str):
         st.session_state["scans_used_this_month"] += 1
 
 
+def format_inr(val: float) -> str:
+    """Formats large figures into Indian Crores (Cr), Lakhs (L), or standard thousands."""
+    abs_v = abs(val)
+    if abs_v >= 10_000_000:
+        return f"₹ {val / 10_000_000:.2f} Cr"
+    elif abs_v >= 100_000:
+        return f"₹ {val / 100_000:.2f} L"
+    else:
+        return f"₹ {val:,.0f}"
+
+
+# Agronomic benchmarks for per-acre economic modeling
+CROP_ACRE_BENCHMARKS = {
+    "Tomato": {
+        "avg_yield_tonnes": 18.0,
+        "market_price_per_kg": 18.0,
+        "gross_acre_value": 324000,
+        "typical_sprays": 6,
+        "default_cost_per_spray": 950,
+        "default_loss_prevented_pct": 30.0,
+    },
+    "Potato": {
+        "avg_yield_tonnes": 15.0,
+        "market_price_per_kg": 15.0,
+        "gross_acre_value": 225000,
+        "typical_sprays": 5,
+        "default_cost_per_spray": 850,
+        "default_loss_prevented_pct": 28.0,
+    },
+    "Corn / Maize": {
+        "avg_yield_tonnes": 3.2,
+        "market_price_per_kg": 21.0,
+        "gross_acre_value": 67200,
+        "typical_sprays": 3,
+        "default_cost_per_spray": 650,
+        "default_loss_prevented_pct": 22.0,
+    },
+    "Rice / Paddy": {
+        "avg_yield_tonnes": 2.8,
+        "market_price_per_kg": 23.0,
+        "gross_acre_value": 64400,
+        "typical_sprays": 4,
+        "default_cost_per_spray": 750,
+        "default_loss_prevented_pct": 25.0,
+    },
+    "Chilli / Capsicum": {
+        "avg_yield_tonnes": 8.0,
+        "market_price_per_kg": 45.0,
+        "gross_acre_value": 360000,
+        "typical_sprays": 7,
+        "default_cost_per_spray": 1100,
+        "default_loss_prevented_pct": 35.0,
+    },
+    "Cotton": {
+        "avg_yield_tonnes": 1.2,
+        "market_price_per_kg": 72.0,
+        "gross_acre_value": 86400,
+        "typical_sprays": 5,
+        "default_cost_per_spray": 900,
+        "default_loss_prevented_pct": 28.0,
+    }
+}
+
+
 # Auto-load default sample on launch
 if st.session_state["current_image"] is None:
     load_sample_image("Tomato_Early_Blight.jpg", "Tomato___Early_Blight")
@@ -1177,45 +1241,196 @@ elif nav_mode_index == 5:
 
 
 # =========================================================
-# MODE 6: DEALER ROI & BUSINESS IMPACT
+# MODE 6: DEALER ROI & BUSINESS IMPACT (CRORE SCALE & PER-ACRE)
 # =========================================================
 elif nav_mode_index == 6:
     st.markdown(f"### **{T['roi_page_title']}**")
     st.markdown(f"<p style='color: #475569;'>{T['roi_page_desc']}</p>", unsafe_allow_html=True)
     
-    st.markdown(f"#### **{T['calc_title']}**")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        monthly_farmers = st.slider(T["calc_farmers"], min_value=10, max_value=500, value=120, step=10)
-    with c2:
-        avg_basket = st.slider(T["calc_avg_basket"], min_value=100, max_value=2500, value=650, step=50)
-    with c3:
-        margin_pct = st.slider(T["calc_margin"], min_value=10, max_value=50, value=28, step=1)
+    tab_acre, tab_net, tab_sdg = st.tabs([
+        T["roi_tab_acre"],
+        T["roi_tab_network"],
+        T["roi_tab_sdg"]
+    ])
+    
+    # ------------------ TAB 1: PER-ACRE FIELD ECONOMICS ------------------
+    with tab_acre:
+        st.markdown(f"#### **{T['acre_calc_header']}**")
+        st.caption("Calculates localized field chemistry costs, yield protection, and scales to village/taluk command clusters.")
         
-    monthly_sales = monthly_farmers * avg_basket
-    gross_profit = monthly_sales * (margin_pct / 100.0)
-    plan_cost = MONETIZATION_TIERS[st.session_state["current_tier"]]["price_inr"]
-    net_roi = gross_profit - plan_cost
-    
-    m1, m2, m3 = st.columns(3)
-    m1.metric(T["metric_monthly_revenue"], f"₹ {monthly_sales:,.0f}")
-    m2.metric(T["metric_monthly_profit"], f"₹ {gross_profit:,.0f}")
-    m3.metric(T["metric_net_gain"], f"₹ {net_roi:,.0f}", delta=f"+{(net_roi / max(plan_cost, 1))*100:.0f}% ROI" if plan_cost > 0 else "Free Plan")
-    
-    st.markdown("---")
-    
-    col_s1, col_s2 = st.columns(2)
-    with col_s1:
+        crop_options = list(CROP_ACRE_BENCHMARKS.keys())
+        c_sel1, c_sel2 = st.columns([1.2, 1.8])
+        with c_sel1:
+            sel_crop = st.selectbox(T["acre_crop_label"], crop_options, index=0)
+        with c_sel2:
+            st.info(f"🌾 **{sel_crop} Economics:** Benchmark Yield: **{CROP_ACRE_BENCHMARKS[sel_crop]['avg_yield_tonnes']} T/Acre** · Market Price: **₹{CROP_ACRE_BENCHMARKS[sel_crop]['market_price_per_kg']}/kg** · Gross Acre Value: **{format_inr(CROP_ACRE_BENCHMARKS[sel_crop]['gross_acre_value'])}/Acre**")
+
+        c_data = CROP_ACRE_BENCHMARKS[sel_crop]
+        
+        f_col1, f_col2, f_col3 = st.columns(3)
+        with f_col1:
+            farmer_holding = st.slider(T["acre_holding_label"], min_value=1.0, max_value=40.0, value=4.0, step=0.5)
+        with f_col2:
+            sprays_per_acre = st.slider(T["acre_sprays_label"], min_value=2, max_value=12, value=c_data["typical_sprays"], step=1)
+        with f_col3:
+            cost_per_spray = st.slider(T["acre_spray_cost_label"], min_value=300, max_value=2500, value=c_data["default_cost_per_spray"], step=50)
+
+        loss_prevent_pct = st.slider(T["acre_loss_prevent_label"], min_value=10.0, max_value=50.0, value=c_data["default_loss_prevented_pct"], step=1.0)
+        
+        # Per-Acre Formulas
+        per_acre_input_cost = sprays_per_acre * cost_per_spray
+        wasted_chemicals_saved = round(cost_per_spray * max(1, round(sprays_per_acre * 0.33)))
+        harvest_value_protected_acre = round(c_data["gross_acre_value"] * (loss_prevent_pct / 100.0))
+        total_farmer_gain = round(farmer_holding * (harvest_value_protected_acre + wasted_chemicals_saved))
+        
+        st.markdown("---")
+        st.markdown("##### **Individual Farmer Balance Sheet (Per Acre & Farm Total):**")
+        
+        m_a1, m_a2, m_a3, m_a4 = st.columns(4)
+        m_a1.metric(T["acre_metric_cost_title"], f"₹ {per_acre_input_cost:,.0f} / Ac", help="Total input spray budget per acre over the crop season")
+        m_a2.metric(T["acre_metric_wasted_saved"], f"₹ {wasted_chemicals_saved:,.0f} / Ac", delta="Saved from Misdiagnosis")
+        m_a3.metric(T["acre_metric_harvest_saved"], f"₹ {harvest_value_protected_acre:,.0f} / Ac", delta=f"+{loss_prevent_pct:.0f}% Yield Saved")
+        m_a4.metric(T["acre_metric_net_family"], f"₹ {total_farmer_gain:,.0f}", delta=f"{farmer_holding:.1f} Acres Combined")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Regional Command Scale Section (Crores Scale)
+        st.markdown(f"#### **{T['acre_banner_title']}**")
+        st.caption("Expand field-level calculations across the entire geographical territory / village clusters commanded by your Krishi Kendra.")
+        
+        command_acres = st.slider(T["acre_command_label"], min_value=500, max_value=30000, value=3500, step=500)
+        dealer_margin_acre = st.slider("Retailer Average Margin on Bio-Chemical Inputs (%)", min_value=15, max_value=45, value=28, step=1)
+        
+        cluster_harvest_wealth_saved = command_acres * harvest_value_protected_acre
+        cluster_kendra_sales = command_acres * per_acre_input_cost
+        cluster_kendra_margin = cluster_kendra_sales * (dealer_margin_acre / 100.0)
+        
         st.markdown(f"""
-        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #d97706; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
-            <h3 style="color: #0f172a; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg2_title']}</h3>
-            <p style="color: #334155; line-height: 1.55;">{T['sdg2_desc']}</p>
+        <div style="background: #ffffff; border: 2px solid #15803d; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(21,128,61,0.08); margin-top: 10px;">
+            <div style="font-size: 0.80rem; font-weight: 800; color: #15803d; letter-spacing: 0.8px; text-transform: uppercase;">COMMAND AREA COVERAGE: {command_acres:,} CULTIVATED ACRES</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 14px;">
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['acre_banner_crop_saved']}</div>
+                    <div style="font-size: 2.1rem; font-weight: 900; color: #15803d; font-family: 'Playfair Display', serif; margin-top: 4px;">{format_inr(cluster_harvest_wealth_saved)}</div>
+                    <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px;">Food produce saved from rotting across {command_acres:,} acres</div>
+                </div>
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['acre_banner_sales']}</div>
+                    <div style="font-size: 2.1rem; font-weight: 900; color: #0f172a; font-family: 'Playfair Display', serif; margin-top: 4px;">{format_inr(cluster_kendra_sales)}</div>
+                    <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px;">Total fertilizer, bio-fungicide & pesticide retail billing</div>
+                </div>
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['acre_banner_margin']}</div>
+                    <div style="font-size: 2.1rem; font-weight: 900; color: #b45309; font-family: 'Playfair Display', serif; margin-top: 4px;">{format_inr(cluster_kendra_margin)}</div>
+                    <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px;">Net retail gross profit at {dealer_margin_acre}% gross margin</div>
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
-    with col_s2:
+
+    # ------------------ TAB 2: DEALERSHIP NETWORK CRORE SCALE ------------------
+    with tab_net:
+        st.markdown(f"#### **{T['roi_tab_network']}**")
+        st.caption("Simulate commercial financial returns across standalone kiosks, taluk dealer networks, and multi-district distribution chains.")
+        
+        scale_mode = st.radio(
+            T["net_scale_label"],
+            [T["net_scale_opt1"], T["net_scale_opt2"], T["net_scale_opt3"]],
+            horizontal=True
+        )
+        
+        if scale_mode == T["net_scale_opt1"]:
+            def_farmers = 2200
+            def_spend = 18500
+            def_penetration = 65
+            def_margin = 28
+            scale_name = "Single Flagship Krishi Kendra"
+        elif scale_mode == T["net_scale_opt2"]:
+            def_farmers = 14000
+            def_spend = 19500
+            def_penetration = 70
+            def_margin = 27
+            scale_name = "Taluk / Block Retail Franchise (10 Counters)"
+        else:
+            def_farmers = 65000
+            def_spend = 21000
+            def_penetration = 75
+            def_margin = 25
+            scale_name = "District Distributor & FPO Enterprise (50 Counters)"
+            
+        n_col1, n_col2 = st.columns(2)
+        with n_col1:
+            farmers_count = st.slider(T["net_farmers_slider"], min_value=200, max_value=100000, value=def_farmers, step=200)
+            annual_spend = st.slider(T["net_spend_slider"], min_value=3000, max_value=75000, value=def_spend, step=1000)
+        with n_col2:
+            ai_adoption = st.slider(T["net_adoption_slider"], min_value=20, max_value=100, value=def_penetration, step=5)
+            dealer_margin_net = st.slider(T["net_margin_slider"], min_value=10, max_value=45, value=def_margin, step=1)
+            
+        active_diagnosed_farmers = farmers_count * (ai_adoption / 100.0)
+        annual_network_turnover = active_diagnosed_farmers * annual_spend
+        annual_gross_dealer_profit = annual_network_turnover * (dealer_margin_net / 100.0)
+        regional_crop_wealth_protected = active_diagnosed_farmers * 78000
+        
+        plan_id = st.session_state["current_tier"]
+        annual_saas_cost = MONETIZATION_TIERS[plan_id]["price_inr"] * 12
+        net_commercial_gain = annual_gross_dealer_profit - annual_saas_cost
+        
         st.markdown(f"""
-        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #16a34a; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
-            <h3 style="color: #0f172a; margin-top: 0; font-family: 'Playfair Display', serif;">{T['sdg15_title']}</h3>
-            <p style="color: #334155; line-height: 1.55;">{T['sdg15_desc']}</p>
+        <div style="background: #ffffff; border: 2px solid #0f172a; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(15,23,42,0.08); margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+                <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">COMMERCIAL PROJECTION · {scale_name}</span>
+                <span style="background: #0f172a; color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 700;">{farmers_count:,} FARMERS REGISTERED</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['net_metric_turnover']}</div>
+                    <div style="font-size: 2.3rem; font-weight: 900; color: #0f172a; font-family: 'Playfair Display', serif; margin-top: 6px;">{format_inr(annual_network_turnover)}</div>
+                    <div style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">Annual input sales through AI-prescribed recommendations</div>
+                </div>
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['net_metric_profit']}</div>
+                    <div style="font-size: 2.3rem; font-weight: 900; color: #15803d; font-family: 'Playfair Display', serif; margin-top: 6px;">{format_inr(annual_gross_dealer_profit)}</div>
+                    <div style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">Earned at {dealer_margin_net}% gross profit margin</div>
+                </div>
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 18px;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #475569;">{T['net_metric_crop_wealth']}</div>
+                    <div style="font-size: 2.3rem; font-weight: 900; color: #b45309; font-family: 'Playfair Display', serif; margin-top: 6px;">{format_inr(regional_crop_wealth_protected)}</div>
+                    <div style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">Farm harvest value saved across {active_diagnosed_farmers:,.0f} treated farms</div>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <span style="font-size: 0.88rem; color: #334155;">Annual CropCare Pro Subscription: <strong>₹ {annual_saas_cost:,} / year</strong></span>
+                <span style="font-size: 1.05rem; font-weight: 850; color: #15803d;">Net Dealer ROI: +{((net_commercial_gain / max(annual_saas_cost, 1)) * 100):,.0f}% Return</span>
+            </div>
         </div>
         """, unsafe_allow_html=True)
+
+    # ------------------ TAB 3: REGIONAL SDG & ENVIRONMENTAL IMPACT ------------------
+    with tab_sdg:
+        st.markdown(f"#### **{T['roi_tab_sdg']}**")
+        st.caption("Quantifiable environmental and food system impact metrics measured under UN Sustainable Development Goals.")
+        
+        food_tonnes_saved = round((3500 * (15.0 * 0.28)), 1)
+        toxic_runoff_averted_kg = round(3500 * 2.8, 1)
+        
+        col_s1, col_s2 = st.columns(2)
+        with col_s1:
+            st.markdown(f"""
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #d97706; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
+                <span style="background: #fef3c7; color: #92400e; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">UN SDG 2: ZERO HUNGER</span>
+                <h3 style="color: #0f172a; margin-top: 8px; font-family: 'Playfair Display', serif;">{T['sdg2_title']}</h3>
+                <div style="font-size: 2.2rem; font-weight: 900; color: #d97706; font-family: 'Playfair Display', serif; margin: 8px 0;">{food_tonnes_saved:,} Tonnes</div>
+                <div style="font-size: 0.82rem; color: #475569; font-weight: 600;">Food Harvest Saved from Blight & Rot in Cluster</div>
+                <p style="color: #334155; line-height: 1.55; margin-top: 10px;">{T['sdg2_desc']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_s2:
+            st.markdown(f"""
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-top: 5px solid #16a34a; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(15,23,42,0.04);">
+                <span style="background: #dcfce7; color: #166534; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">UN SDG 15: LIFE ON LAND</span>
+                <h3 style="color: #0f172a; margin-top: 8px; font-family: 'Playfair Display', serif;">{T['sdg15_title']}</h3>
+                <div style="font-size: 2.2rem; font-weight: 900; color: #15803d; font-family: 'Playfair Display', serif; margin: 8px 0;">{toxic_runoff_averted_kg:,} kg</div>
+                <div style="font-size: 0.82rem; color: #475569; font-weight: 600;">Synthetic Chemical Residues Averted from Groundwater</div>
+                <p style="color: #334155; line-height: 1.55; margin-top: 10px;">{T['sdg15_desc']}</p>
+            </div>
+            """, unsafe_allow_html=True)
