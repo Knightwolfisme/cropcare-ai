@@ -19,13 +19,9 @@ UI_TRANSLATIONS = {
         "sidebar_lang_label": "🗣️ Shopkeeper / Counter Language",
         "nav_label": "Retail Terminal Menu",
         "nav_modes": [
-            "🏪 Counter Diagnosis & Stock Dispenser",
-            "🧾 Retail Invoice & Prescription Generator",
-            "💎 Monetization Plans & Subscription Tiers",
-            "🔍 Explainable AI & Lesion Heatmap",
-            "⛅ Outbreak Radar & Pre-Stocking Alert",
-            "⚡ Edge Hardware Benchmarks",
-            "📊 Dealer ROI & Business Impact"
+            "🏪 Counter Diagnosis & Prescription Dispensary",
+            "⛅ Live Weather Radar & Outbreak Forecaster",
+            "📊 Revenue & Per-Acre Impact Simulator"
         ],
         "edge_engine_active": "⚡ RETAIL POS ENGINE ACTIVE",
         "edge_engine_desc": "• Mode: Shopkeeper Counter POS<br>• Speed: ~22ms instant diagnosis<br>• Connectivity: 100% Offline (No cloud fees)<br>• Integrated: Auto SKU Stock Matcher",
@@ -238,13 +234,9 @@ UI_TRANSLATIONS = {
         "sidebar_lang_label": "🗣️ दुकानदार / काउंटर भाषा",
         "nav_label": "रिटेल टर्मिनल मेनू",
         "nav_modes": [
-            "🏪 काउंटर निदान एवं दवा स्टॉक बिक्री",
-            "🧾 रिटेल बिल व पर्ची जनरेटर",
-            "💎 डीलर योजनाएं व सदस्यता स्तर",
-            "🔍 लक्षण हीटमैप व दृश्य सत्यापन",
-            "⛅ रोग प्रकोप रडार व अग्रिम स्टॉक",
-            "⚡ एज हार्डवेयर व ऑफलाइन प्रदर्शन",
-            "📊 डीलर मुनाफा व व्यापारिक प्रभाव"
+            "🏪 काउंटर निदान एवं दवा पर्ची",
+            "⛅ लाइव मौसम व रोग प्रकोप रडार",
+            "📊 राजस्व व प्रति एकड़ सिमुलेटर"
         ],
         "edge_engine_active": "⚡ रिटेल पीओएस इंजन सक्रिय",
         "edge_engine_desc": "• मोड: दुकानदार काउंटर पीओएस<br>• गति: ~22ms तुरंत निदान<br>• कनेक्टिविटी: 100% ऑफलाइन (क्लाउड खर्च शून्य)<br>• फीचर: स्टॉक मिलान व बिलिंग",
@@ -457,13 +449,9 @@ UI_TRANSLATIONS = {
         "sidebar_lang_label": "🗣️ ಅಂಗಡಿಯವರ ಭಾಷೆ",
         "nav_label": "ಟರ್ಮಿನಲ್ ಮೆನು",
         "nav_modes": [
-            "🏪 ಕೌಂಟರ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ಸ್ಟಾಕ್ ಶಿಫಾರಸು",
-            "🧾 ಚಿಲ್ಲರೆ ಬಿಲ್ ಮತ್ತು ಚೀಟಿ ಜನರೇಟರ್",
-            "💎 ಡೀಲರ್ ಯೋಜನೆಗಳು ಮತ್ತು ಚಂದಾದಾರಿಕೆ",
-            "🔍 ರೋಗ ಲಕ್ಷಣ ಹೀಟ್‌ಮ್ಯಾಪ್ ಪರಿಶೀಲನೆ",
-            "⛅ ರೋಗ ಹರಡುವಿಕೆ ರೇಡಾರ್ ಮತ್ತು ಮುಂಗಡ ಸ್ಟಾಕ್",
-            "⚡ ಎಡ್ಜ್ ಹಾರ್ಡ್‌ವೇರ್ ಕಾರ್ಯಕ್ಷಮತೆ",
-            "📊 ಅಂಗಡಿಯವರ ಲಾಭ ಮತ್ತು ವ್ಯಾಪಾರ ಪ್ರಭಾವ"
+            "🏪 ಕೌಂಟರ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ಔಷಧ ಚೀಟಿ",
+            "⛅ ಲೈವ್ ಹವಾಮಾನ ಮತ್ತು ರೋಗ ಮುನ್ಸೂಚನೆ",
+            "📊 ಆದಾಯ ಮತ್ತು ಪ್ರತಿ ಎಕರೆ ಸಿಮ್ಯುಲೇಟರ್"
         ],
         "edge_engine_active": "⚡ ಕೌಂಟರ್ ಪಿಒಎಸ್ ಸಕ್ರಿಯವಾಗಿದೆ",
         "edge_engine_desc": "• ಮೋಡ್: ಅಂಗಡಿಯ ಕೌಂಟರ್ ಪಿಒಎಸ್<br>• ವೇಗ: ~22ms ತಕ್ಷಣದ ಪತ್ತೆ<br>• ಸಂಪರ್ಕ: 100% ಆಫ್‌ಲೈನ್ (ಶೂನ್ಯ ಕ್ಲೌಡ್ ವೆಚ್ಚ)<br>• ವೈಶಿಷ್ಟ್ಯ: ಸ್ವಯಂಚಾಲಿತ ಸ್ಟಾಕ್ ಹೊಂದಾಣಿಕೆ",
@@ -676,13 +664,9 @@ UI_TRANSLATIONS = {
         "sidebar_lang_label": "🗣️ దుకాణదారుడి భాష",
         "nav_label": "రిటైల్ టెర్మినల్ మెనూ",
         "nav_modes": [
-            "🏪 కౌంటర్ రోగ నిర్ధారణ & స్టాక్ విక్రయం",
-            "🧾 రిటైల్ బిల్లు & చీటీ జనరేటర్",
-            "💎 డీలర్ ప్రణాళికలు & సభ్యత్వాలు",
-            "🔍 తెగులు హీట్‌మ్యాప్ పరిశీలన",
-            "⛅ వ్యాప్తి రాడార్ & ముందస్తు స్టాక్",
-            "⚡ ఎడ్జ్ హార్డ్‌వేర్ పనితీరు పోలిక",
-            "📊 దుకాణదారుడి లాభం & వ్యాపార ప్రభావం"
+            "🏪 కౌంటర్ రోగ నిర్ధారణ & ప్రిస్క్రిప్షన్",
+            "⛅ లైవ్ వాతావరణం & వ్యాధి రాడార్",
+            "📊 ఆదాయం & ఎకరా స్థాయి సిమ్యులేటర్"
         ],
         "edge_engine_active": "⚡ రిటైల్ పీవోఎస్ యాక్టివ్‌గా ఉంది",
         "edge_engine_desc": "• మోడ్: దుకాణదారు కౌంటర్ పీవోఎస్<br>• వేగం: ~22ms తక్షణ నిర్ధారణ<br>• కనెక్టివిటీ: 100% ఆఫ్‌లైన్ (క్లౌడ్ ఫీజులు సున్నా)<br>• ఫీచర్: ఆటో స్టాక్ మ్యాచింగ్",

@@ -14,7 +14,9 @@ if CURRENT_DIR not in sys.path:
 
 import io
 import time
+import json
 import urllib.parse
+import urllib.request
 import importlib
 import numpy as np
 import cv2
@@ -372,11 +374,88 @@ if "shop_phone" not in st.session_state:
     st.session_state["shop_phone"] = "080-28394411 / 9448011223"
 if "scans_used_this_month" not in st.session_state:
     st.session_state["scans_used_this_month"] = 14
+if "weather_risk_factor" not in st.session_state:
+    st.session_state["weather_risk_factor"] = 1.25
+if "weather_city_name" not in st.session_state:
+    st.session_state["weather_city_name"] = "Kolar, Karnataka (Tomato & Veg Belt)"
+if "apply_weather_factor" not in st.session_state:
+    st.session_state["apply_weather_factor"] = True
 
 
 # ---------------------------------------------------------
-# Helper Functions
+# Helper Functions & Live Data Integrations
 # ---------------------------------------------------------
+INDIAN_AGRI_DISTRICTS = {
+    "Kolar, Karnataka (Tomato & Veg Belt)": {"lat": 13.136, "lon": 78.129, "crop": "Tomato"},
+    "Nashik, Maharashtra (Onion & Horticulture)": {"lat": 19.997, "lon": 73.789, "crop": "Tomato"},
+    "Guntur, Andhra Pradesh (Chilli & Cotton)": {"lat": 16.306, "lon": 80.436, "crop": "Chilli"},
+    "Karnal, Haryana (Paddy & Wheat Belt)": {"lat": 29.685, "lon": 76.990, "crop": "Rice"},
+    "Shimla, Himachal Pradesh (Apple & Potato)": {"lat": 31.104, "lon": 77.173, "crop": "Potato"},
+    "Varanasi, Uttar Pradesh (Gangetic Plains)": {"lat": 25.317, "lon": 82.973, "crop": "Tomato"},
+    "Baramati / Pune, Maharashtra (Maize & Sugarcane)": {"lat": 18.152, "lon": 74.577, "crop": "Corn"},
+}
+
+
+@st.cache_data(ttl=600)
+def fetch_live_weather(lat: float, lon: float) -> dict:
+    """Queries Open-Meteo live API to extract microclimate data and compute disease surge risk factor."""
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,relative_humidity_2m_max&timezone=auto"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "CropCareAI/1.0"})
+        with urllib.request.urlopen(req, timeout=4) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            current = data.get("current", {})
+            daily = data.get("daily", {})
+            temp = float(current.get("temperature_2m", 26.0))
+            rh = float(current.get("relative_humidity_2m", 70.0))
+            wind = float(current.get("wind_speed_10m", 12.0))
+            rain_prob = float(daily.get("precipitation_probability_max", [45.0])[0]) if daily.get("precipitation_probability_max") else 40.0
+            
+            # Epidemiological disease pressure scoring
+            risk = 10.0
+            if 18.0 <= temp <= 29.0:
+                risk += 35.0
+            elif 14.0 <= temp <= 33.0:
+                risk += 20.0
+            else:
+                risk += 5.0
+                
+            if rh >= 80.0:
+                risk += 35.0
+            elif rh >= 65.0:
+                risk += 20.0
+            else:
+                risk += 5.0
+                
+            risk += min(rain_prob * 0.30, 30.0)
+            risk_score = round(min(max(risk, 5.0), 100.0), 1)
+            
+            # Risk factor multiplier for economic calculations (bounded 0.85x to 1.65x)
+            factor = round(1.0 + (risk_score - 40.0) / 100.0, 2)
+            factor = max(0.85, min(factor, 1.65))
+            
+            return {
+                "success": True,
+                "temp": temp,
+                "rh": rh,
+                "wind": wind,
+                "rain_prob": rain_prob,
+                "risk_score": risk_score,
+                "factor": factor,
+                "is_live": True
+            }
+    except Exception as e:
+        return {
+            "success": False,
+            "temp": 26.5,
+            "rh": 76.0,
+            "wind": 10.5,
+            "rain_prob": 55.0,
+            "risk_score": 70.0,
+            "factor": 1.30,
+            "is_live": False,
+            "error": str(e)
+        }
 def load_sample_image(filename: str, hint_key: str):
     sample_dir = os.path.join(os.path.dirname(__file__), "samples")
     path = os.path.join(sample_dir, filename)
@@ -837,136 +916,132 @@ if nav_mode_index == 0:
                 st.markdown(f"##### **{T['chemical_title']}**")
                 st.warning(top_info["action_plan"]["chemical_advisory"])
                 st.caption(T["chemical_sdg_caption"])
-        else:
-            st.markdown(f"### **{T['step2_title']}**")
-            st.info(T["awaiting_result_hint"])
+                # -------------------------------------------------------------
+                # Explainable AI & Lesion Heatmap Visual Proof (Expander)
+                # -------------------------------------------------------------
+                with st.expander("🔬 " + T["xai_title"], expanded=False):
+                    st.markdown(f"<p style='color: #475569;'>{T['xai_desc']}</p>", unsafe_allow_html=True)
+                    res = st.session_state["inference_result"]
+                    col_img1, col_img2, col_img3 = st.columns(3)
+                    with col_img1:
+                        st.markdown(f"##### **{T['xai_col1_title']}**")
+                        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+                        st.image(res["enhanced_img"])
+                        st.markdown(f'<div class="specimen-tag">PLATE 01 • FOLIAR CONTOUR ({res["prep_info"]["leaf_coverage_ratio"]*100:.1f}%)</div></div>', unsafe_allow_html=True)
+                    with col_img2:
+                        st.markdown(f"##### **{T['xai_col2_title']}**")
+                        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+                        st.image(res["heatmap_img"])
+                        st.markdown('<div class="specimen-tag" style="background: #fef2f2; color: #991b1b; border-color: #fecaca;">PLATE 02 • GRAD-CAM ACTIVATION MAP</div></div>', unsafe_allow_html=True)
+                        st.caption(T["xai_col2_sub"])
+                    with col_img3:
+                        st.markdown(f"##### **{T['xai_col3_title']}**")
+                        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
+                        st.image(res["annotated_img"])
+                        st.markdown(f'<div class="specimen-tag">PLATE 03 • {res["lesion_count"]} LESION CLUSTERS</div></div>', unsafe_allow_html=True)
 
+                    st.markdown(f"##### **{T['xai_metrics_title']}**")
+                    mx1, mx2, mx3, mx4 = st.columns(4)
+                    mx1.metric(T["metric_necrotic"], f"{res['lesion_coverage_pct']}%")
+                    mx2.metric(T["metric_chlorosis"], f"{res['chlorosis_coverage_pct']}%")
+                    mx3.metric(T["metric_severity"], res["severity"].split()[0])
+                    mx4.metric(T["metric_sharpness"], f"{res['quality_info']['laplacian_var']:.1f}")
 
-# =========================================================
-# MODE 1: RETAIL INVOICE & APOTHECARY PRESCRIPTION GENERATOR
-# =========================================================
-elif nav_mode_index == 1:
-    st.markdown(f"### **{T['inv_title']}**")
-    st.markdown(f"<p style='color: #475569;'>{T['inv_desc']}</p>", unsafe_allow_html=True)
-    
-    if st.session_state["current_tier"] == "starter":
-        st.warning("🔒 **Branded Invoice Generation is locked on the Free Starter plan.** Upgrade to Krishi Kendra Pro to print branded receipts with your shop GST and send 1-click WhatsApp prescriptions.")
-        if st.button("⭐ Unlock Branded Receipts (Switch to Pro Plan Demo)"):
-            st.session_state["current_tier"] = "pro"
-            st.rerun()
-            
-    col_shop, col_cust = st.columns(2)
-    with col_shop:
-        st.markdown("##### **Shop & Dealership Details:**")
-        st.session_state["shop_name"] = st.text_input(T["shop_name_label"], value=st.session_state["shop_name"])
-        st.session_state["shop_gst"] = st.text_input(T["shop_gst_label"], value=st.session_state["shop_gst"])
-        st.session_state["shop_phone"] = st.text_input(T["shop_phone_label"], value=st.session_state["shop_phone"])
-        
-    with col_cust:
-        st.markdown("##### **Farmer / Customer Details:**")
-        st.session_state["farmer_name"] = st.text_input("Customer Name", value=st.session_state["farmer_name"])
-        st.session_state["farmer_phone"] = st.text_input("Customer WhatsApp No.", value=st.session_state["farmer_phone"])
-        st.session_state["farmer_village"] = st.text_input("Farmer Village", value=st.session_state["farmer_village"])
+                # -------------------------------------------------------------
+                # Branded Botanical Prescription Slip & Instant Cash Memo
+                # -------------------------------------------------------------
+                st.markdown("---")
+                st.markdown(f"### **{T['inv_title']}**")
+                st.caption(T["inv_desc"])
 
-    st.markdown("---")
-    
-    # Cart items editor
-    st.markdown("##### **Prescribed Products & Billing Items:**")
-    
-    if not st.session_state["cart_items"] and st.session_state["inference_result"]:
-        top_skus = st.session_state["inference_result"]["disease_info"].get("retail_inventory", [])
-        if top_skus:
-            st.session_state["cart_items"] = [{
-                "sku_id": top_skus[0]["sku_id"],
-                "name": top_skus[0]["name"],
-                "pack_size": top_skus[0]["pack_size"],
-                "price": top_skus[0]["mrp"],
-                "dosage": top_skus[0]["dosage"]
-            }]
-            if len(top_skus) > 1 and top_skus[1].get("is_primary"):
-                st.session_state["cart_items"].append({
-                    "sku_id": top_skus[1]["sku_id"],
-                    "name": top_skus[1]["name"],
-                    "pack_size": top_skus[1]["pack_size"],
-                    "price": top_skus[1]["mrp"],
-                    "dosage": top_skus[1]["dosage"]
-                })
+                # Auto-populate cart with primary recommendation if empty
+                if not st.session_state["cart_items"] and top_info.get("retail_inventory"):
+                    primary_sku = top_info["retail_inventory"][0]
+                    st.session_state["cart_items"].append({
+                        "sku_id": primary_sku["sku_id"],
+                        "name": primary_sku["name"],
+                        "pack_size": primary_sku["pack_size"],
+                        "price": primary_sku["mrp"],
+                        "dosage": primary_sku["dosage"]
+                    })
 
-    for i, item in enumerate(st.session_state["cart_items"]):
-        c1, c2, c3, c4 = st.columns([3, 1.5, 1.5, 0.8])
-        with c1:
-            st.write(f"**{i+1}. {item['name']}** ({item['pack_size']})")
-            st.caption(f"Dosage: {item['dosage']}")
-        with c2:
-            st.write(f"₹ {item['price']}")
-        with c3:
-            st.write("Qty: 1")
-        with c4:
-            if st.button("🗑️", key=f"del_cart_{i}"):
-                st.session_state["cart_items"].pop(i)
-                st.rerun()
+                # Cart items manager
+                if st.session_state["cart_items"]:
+                    st.markdown("##### **Prescribed Items in Prescription:**")
+                    for i, itm in enumerate(st.session_state["cart_items"]):
+                        ci1, ci2, ci3, ci4 = st.columns([3, 1.5, 1.2, 0.8])
+                        with ci1:
+                            st.write(f"**{i+1}. {itm['name']}** ({itm['pack_size']})")
+                            st.caption(f"Dosage: {itm['dosage']}")
+                        with ci2:
+                            st.write(f"₹ {itm['price']}")
+                        with ci3:
+                            st.write("Qty: 1")
+                        with ci4:
+                            if st.button("🗑️", key=f"del_cart_{i}"):
+                                st.session_state["cart_items"].pop(i)
+                                st.rerun()
 
-    total_invoice_amt = sum(item["price"] for item in st.session_state["cart_items"])
-    
-    # ------------------ ARTISANAL VISUAL PRESCRIPTION SLIP ------------------
-    diag_name = st.session_state["inference_result"]["disease_info"]["disease_name"] if st.session_state["inference_result"] else "Crop Pathology Check"
-    crop_name = st.session_state["inference_result"]["disease_info"]["crop"] if st.session_state["inference_result"] else "Vegetable"
-    
-    items_rows_html = "".join([
-        f"""<tr>
-            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; font-size: 0.95rem;'>
-                <strong>{idx+1}. {itm['name']}</strong> ({itm['pack_size']})<br>
-                <span style='font-size: 0.80rem; color: #64748b; font-family: sans-serif;'>Dosage: {itm['dosage']}</span>
-            </td>
-            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; text-align: right; font-weight: 700; font-size: 0.95rem;'>₹ {itm['price']}</td>
-        </tr>""" for idx, itm in enumerate(st.session_state["cart_items"])
-    ])
-    
-    visual_memo_html = f"""
-    <div class="apothecary-receipt">
-        <div class="receipt-watermark">AUTHENTICATED</div>
-        <div style="text-align: center; margin-bottom: 16px;">
-            <h2 style="margin: 0; color: #0f172a; font-size: 1.8rem;">{st.session_state['shop_name']}</h2>
-            <div style="font-size: 0.82rem; color: #854d0e; font-family: sans-serif; letter-spacing: 0.5px;">GSTIN/Lic: {st.session_state['shop_gst']} • Tel: {st.session_state['shop_phone']}</div>
-            <div style="font-size: 0.78rem; color: #475569; margin-top: 4px; font-family: sans-serif;">Receipt: POS-CK-{int(time.time())} • Date: {time.strftime('%d %B %Y, %H:%M')}</div>
-        </div>
-        
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: sans-serif; font-size: 0.85rem; display: flex; justify-content: space-between;">
-            <div>
-                <div>Customer: <strong style='color: #0f172a;'>{st.session_state['farmer_name']}</strong></div>
-                <div>Location: <strong style='color: #0f172a;'>{st.session_state['farmer_village']}</strong></div>
-            </div>
-            <div style="text-align: right;">
-                <div>Tested Crop: <strong style='color: #0f172a;'>{crop_name}</strong></div>
-                <div>Diagnosis: <strong style="color: #b91c1c;">{diag_name}</strong></div>
-            </div>
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px;">
-            <thead>
-                <tr style="border-bottom: 1.5px solid #d4af37; text-align: left; font-size: 0.80rem; color: #854d0e; text-transform: uppercase;">
-                    <th style="padding: 4px;">Prescribed Item & Spray Dosage</th>
-                    <th style="padding: 4px; text-align: right;">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                {items_rows_html}
-            </tbody>
-        </table>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0f172a; padding-top: 12px; margin-top: 8px;">
-            <div style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">Knapsack spray volume: 15L • Safe organic treatment</div>
-            <div style="text-align: right;">
-                <span style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">TOTAL CASH DUE:</span>
-                <span style="font-size: 1.6rem; font-weight: 900; color: #0f172a; margin-left: 8px;">₹ {total_invoice_amt}</span>
-            </div>
-        </div>
-    </div>
-    """
-    st.markdown(visual_memo_html, unsafe_allow_html=True)
-    
-    # Build text receipt for copy / download
-    receipt_text = f"""============================================================
+                    total_invoice_amt = sum(item["price"] for item in st.session_state["cart_items"])
+
+                    # Apothecary receipt view
+                    diag_name = st.session_state["inference_result"]["disease_info"]["disease_name"]
+                    crop_name = st.session_state["inference_result"]["disease_info"]["crop"]
+                    items_rows_html = "".join([
+                        f"""<tr>
+                            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; font-size: 0.95rem;'>
+                                <strong>{idx+1}. {itm['name']}</strong> ({itm['pack_size']})<br>
+                                <span style='font-size: 0.80rem; color: #64748b; font-family: sans-serif;'>Dosage: {itm['dosage']}</span>
+                            </td>
+                            <td style='padding: 8px 4px; border-bottom: 1px solid #ebdccb; text-align: right; font-weight: 700; font-size: 0.95rem;'>₹ {itm['price']}</td>
+                        </tr>""" for idx, itm in enumerate(st.session_state["cart_items"])
+                    ])
+
+                    visual_memo_html = f"""
+                    <div class="apothecary-receipt">
+                        <div class="receipt-watermark">AUTHENTICATED</div>
+                        <div style="text-align: center; margin-bottom: 16px;">
+                            <h2 style="margin: 0; color: #0f172a; font-size: 1.8rem;">{st.session_state['shop_name']}</h2>
+                            <div style="font-size: 0.82rem; color: #854d0e; font-family: sans-serif; letter-spacing: 0.5px;">GSTIN/Lic: {st.session_state['shop_gst']} • Tel: {st.session_state['shop_phone']}</div>
+                            <div style="font-size: 0.78rem; color: #475569; margin-top: 4px; font-family: sans-serif;">Receipt: POS-CK-{int(time.time())} • Date: {time.strftime('%d %B %Y, %H:%M')}</div>
+                        </div>
+                        
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-family: sans-serif; font-size: 0.85rem; display: flex; justify-content: space-between;">
+                            <div>
+                                <div>Customer: <strong style='color: #0f172a;'>{st.session_state['farmer_name']}</strong></div>
+                                <div>Location: <strong style='color: #0f172a;'>{st.session_state['farmer_village']}</strong></div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div>Tested Crop: <strong style='color: #0f172a;'>{crop_name}</strong></div>
+                                <div>Diagnosis: <strong style="color: #b91c1c;">{diag_name}</strong></div>
+                            </div>
+                        </div>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px;">
+                            <thead>
+                                <tr style="border-bottom: 1.5px solid #d4af37; text-align: left; font-size: 0.80rem; color: #854d0e; text-transform: uppercase;">
+                                    <th style="padding: 4px;">Prescribed Item & Spray Dosage</th>
+                                    <th style="padding: 4px; text-align: right;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items_rows_html}
+                            </tbody>
+                        </table>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #0f172a; padding-top: 12px; margin-top: 8px;">
+                            <div style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">Knapsack spray volume: 15L • Safe organic treatment</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 0.85rem; color: #475569; font-family: sans-serif;">TOTAL CASH DUE:</span>
+                                <span style="font-size: 1.6rem; font-weight: 900; color: #0f172a; margin-left: 8px;">₹ {total_invoice_amt}</span>
+                            </div>
+                        </div>
+                    </div>
+                    """
+                    st.markdown(visual_memo_html, unsafe_allow_html=True)
+
+                    # Text format for download & WhatsApp
+                    receipt_text = f"""============================================================
 {st.session_state['shop_name'].upper()}
 Reg/GSTIN: {st.session_state['shop_gst']}
 Ph: {st.session_state['shop_phone']}
@@ -988,12 +1063,12 @@ Status      : Verified on-device counter diagnosis
 PRESCRIBED PRODUCTS DISPENSED:
 ------------------------------------------------------------
 """
-    for idx, itm in enumerate(st.session_state["cart_items"]):
-        receipt_text += f"{idx+1}. {itm['name']} ({itm['pack_size']})\n"
-        receipt_text += f"   Dosage : {itm['dosage']}\n"
-        receipt_text += f"   Price  : Rs. {itm['price']}\n\n"
+                    for idx, itm in enumerate(st.session_state["cart_items"]):
+                        receipt_text += f"{idx+1}. {itm['name']} ({itm['pack_size']})\n"
+                        receipt_text += f"   Dosage : {itm['dosage']}\n"
+                        receipt_text += f"   Price  : Rs. {itm['price']}\n\n"
 
-    receipt_text += f"""------------------------------------------------------------
+                    receipt_text += f"""------------------------------------------------------------
 TOTAL CASH AMOUNT : Rs. {total_invoice_amt}
 ------------------------------------------------------------
 IMPORTANT SPRAYING INSTRUCTIONS FOR FARMER:
@@ -1006,280 +1081,206 @@ Thank you for visiting {st.session_state['shop_name']}!
 Empowering Farmers with Accessible AI & Smart Agriculture.
 ============================================================
 """
-    
-    with st.expander("📄 View Plain Text Memo (Raw Format)"):
-        st.code(receipt_text, language="text")
-    
-    col_act1, col_act2, col_act3 = st.columns(3)
-    with col_act1:
-        st.download_button(
-            T["btn_download_bill"],
-            data=receipt_text,
-            file_name=f"Prescription_Bill_{st.session_state['farmer_phone']}.txt",
-            mime="text/plain",
-            type="primary"
-        )
-    with col_act2:
-        encoded_msg = urllib.parse.quote(receipt_text)
-        clean_phone = st.session_state['farmer_phone'].replace("+", "").replace("-", "").strip()
-        wa_url = f"https://wa.me/91{clean_phone}?text={encoded_msg}"
-        st.markdown(f"""
-        <a href="{wa_url}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
-            📲 Send Bill via WhatsApp
-        </a>
-        """, unsafe_allow_html=True)
-    with col_act3:
-        if st.button("🧹 Clear Cart for Next Farmer"):
-            st.session_state["cart_items"] = []
-            st.rerun()
+                    col_act1, col_act2, col_act3 = st.columns(3)
+                    with col_act1:
+                        st.download_button(
+                            T["btn_download_bill"],
+                            data=receipt_text,
+                            file_name=f"Prescription_Bill_{st.session_state['farmer_phone']}.txt",
+                            mime="text/plain",
+                            type="primary",
+                            key="btn_down_p_bill"
+                        )
+                    with col_act2:
+                        encoded_msg = urllib.parse.quote(receipt_text)
+                        clean_phone = st.session_state['farmer_phone'].replace("+", "").replace("-", "").strip()
+                        wa_url = f"https://wa.me/91{clean_phone}?text={encoded_msg}"
+                        st.markdown(f"""
+                        <a href="{wa_url}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 12px rgba(37,211,102,0.25);">
+                            📲 Send Bill via WhatsApp
+                        </a>
+                        """, unsafe_allow_html=True)
+                    with col_act3:
+                        if st.button("🧹 Clear Prescribed Items", key="btn_clr_cart_main"):
+                            st.session_state["cart_items"] = []
+                            st.rerun()
+
+        else:
+            st.markdown(f"### **{T['step2_title']}**")
+            st.info(T["awaiting_result_hint"])
 
 
 # =========================================================
-# MODE 2: MONETIZATION PLANS & SUBSCRIPTION TIERS
+# MODE 1: LIVE WEATHER RADAR & OUTBREAK FORECASTER
 # =========================================================
-elif nav_mode_index == 2:
-    st.markdown(f"### **{T['tier_section_title']}**")
-    st.markdown(f"<p style='color: #475569;'>{T['tier_section_sub']}</p>", unsafe_allow_html=True)
-    
-    tier_col1, tier_col2, tier_col3 = st.columns(3)
-    
-    # Tier 1: Starter
-    with tier_col1:
-        t1 = MONETIZATION_TIERS["starter"]
-        is_cur1 = (st.session_state["current_tier"] == "starter")
-        border1 = "3px solid #0f172a" if is_cur1 else "1.5px solid #cbd5e1"
-        st.markdown(f"""
-        <div style="background: #ffffff; border: {border1}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <span style="background: #f1f5f9; color: #334155; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t1['badge']}</span>
-                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t1['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ forever</span></div>
-                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t1['description']}</p>
-                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
-                    <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
-                        {''.join(['<li>' + f + '</li>' for f in t1['features']])}
-                    </ul>
-                    <strong style="font-size: 0.82rem; color: #64748b;">{T['locked_features']}</strong>
-                    <ul style="font-size: 0.78rem; color: #64748b; padding-left: 18px; margin-top: 4px; line-height: 1.5;">
-                        {''.join(['<li>🔒 ' + f + '</li>' for f in t1['locked_features']])}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("Select Starter Plan", key="btn_tier_starter", disabled=is_cur1):
-            st.session_state["current_tier"] = "starter"
-            st.rerun()
-
-    # Tier 2: Pro (High Contrast Clean Finish)
-    with tier_col2:
-        t2 = MONETIZATION_TIERS["pro"]
-        is_cur2 = (st.session_state["current_tier"] == "pro")
-        border2 = "3px solid #15803d" if is_cur2 else "2px solid #15803d"
-        st.markdown(f"""
-        <div style="background: #ffffff; border: {border2}; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(21,128,61,0.12); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: -11px; right: 20px; background: #d97706; color: #ffffff; font-size: 0.70rem; font-weight: 850; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.8px;">★ ARTISAN DEALER CHOICE ★</div>
-            <div>
-                <span style="background: #15803d; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t2['badge']}</span>
-                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t2['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
-                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t2['description']}</p>
-                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
-                    <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
-                        {''.join(['<li>✅ ' + f + '</li>' for f in t2['features']])}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("Select Pro Dealer Plan", key="btn_tier_pro", type="primary" if not is_cur2 else "secondary", disabled=is_cur2):
-            st.session_state["current_tier"] = "pro"
-            st.rerun()
-
-    # Tier 3: Enterprise
-    with tier_col3:
-        t3 = MONETIZATION_TIERS["enterprise"]
-        is_cur3 = (st.session_state["current_tier"] == "enterprise")
-        border3 = "3px solid #7c3aed" if is_cur3 else "1.5px solid #cbd5e1"
-        st.markdown(f"""
-        <div style="background: #ffffff; border: {border3}; border-radius: 14px; padding: 24px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <span style="background: #f5f3ff; color: #6d28d9; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t3['badge']}</span>
-                <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t3['name']}</h3>
-                <div style="font-size: 2.0rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
-                <p style="font-size: 0.85rem; color: #334155; line-height: 1.5;">{t3['description']}</p>
-                <div style="border-top: 1px solid #e2e8f0; margin: 14px 0; padding-top: 12px;">
-                    <strong style="font-size: 0.82rem; color: #0f172a;">{T['included_features']}</strong>
-                    <ul style="font-size: 0.80rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.6;">
-                        {''.join(['<li>🚀 ' + f + '</li>' for f in t3['features']])}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("Select Enterprise Plan", key="btn_tier_ent", disabled=is_cur3):
-            st.session_state["current_tier"] = "enterprise"
-            st.rerun()
-
-    st.markdown("---")
-    st.markdown(f"#### **{T['roi_box_title']}**")
-    st.info(f"💡 **Current Plan Impact ({tier_info['name']}):** {tier_info['roi_projection']}")
-
-
-# =========================================================
-# MODE 3: EXPLAINABLE AI & LESION HEATMAP
-# =========================================================
-elif nav_mode_index == 3:
-    st.markdown(f"### **{T['xai_title']}**")
-    st.markdown(f"<p style='color: #475569;'>{T['xai_desc']}</p>", unsafe_allow_html=True)
-    
-    if st.session_state["inference_result"] is None:
-        load_sample_image("Tomato_Early_Blight.jpg", "Tomato___Early_Blight")
-        
-    res = st.session_state["inference_result"]
-    col_img1, col_img2, col_img3 = st.columns(3)
-    
-    with col_img1:
-        st.markdown(f"##### **{T['xai_col1_title']}**")
-        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
-        st.image(res["enhanced_img"])
-        st.markdown(f'<div class="specimen-tag">PLATE 01 • FOLIAR CONTOUR ({res["prep_info"]["leaf_coverage_ratio"]*100:.1f}%)</div></div>', unsafe_allow_html=True)
-        
-    with col_img2:
-        st.markdown(f"##### **{T['xai_col2_title']}**")
-        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
-        st.image(res["heatmap_img"])
-        st.markdown(f'<div class="specimen-tag" style="background: #fef2f2; color: #991b1b; border-color: #fecaca;">PLATE 02 • GRAD-CAM ACTIVATION MAP</div></div>', unsafe_allow_html=True)
-        st.caption(T["xai_col2_sub"])
-        
-    with col_img3:
-        st.markdown(f"##### **{T['xai_col3_title']}**")
-        st.markdown('<div class="specimen-mount">', unsafe_allow_html=True)
-        st.image(res["annotated_img"])
-        st.markdown(f'<div class="specimen-tag">PLATE 03 • {res["lesion_count"]} LESION CLUSTERS</div></div>', unsafe_allow_html=True)
-        
-    st.markdown("---")
-    
-    st.markdown(f"#### **{T['xai_metrics_title']}**")
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric(T["metric_necrotic"], f"{res['lesion_coverage_pct']}%")
-    m2.metric(T["metric_chlorosis"], f"{res['chlorosis_coverage_pct']}%")
-    m3.metric(T["metric_severity"], res["severity"].split()[0])
-    m4.metric(T["metric_sharpness"], f"{res['quality_info']['laplacian_var']:.1f}")
-
-
-# =========================================================
-# MODE 4: OUTBREAK RADAR & PRE-STOCKING FORECAST
-# =========================================================
-elif nav_mode_index == 4:
+elif nav_mode_index == 1:
     st.markdown(f"### **{T['radar_title']}**")
     st.markdown(f"<p style='color: #475569;'>{T['radar_desc']}</p>", unsafe_allow_html=True)
     
-    col_sliders, col_risk = st.columns([1.1, 1.2], gap="large")
-    
-    with col_sliders:
-        st.markdown(f"##### **{T['radar_inputs_title']}**")
-        temp = st.slider(T["radar_temp"], min_value=10.0, max_value=42.0, value=26.0, step=0.5)
-        rh = st.slider(T["radar_rh"], min_value=30, max_value=100, value=88, step=1)
-        leaf_wetness_hours = st.slider(T["radar_wetness"], min_value=0.0, max_value=18.0, value=5.5, step=0.5)
-        crop_target = st.selectbox(T["radar_crop"], ["Tomato", "Potato", "Corn", "Rice"])
-        
-    with col_risk:
-        st.markdown(f"##### **{T['radar_pred_title']}**")
-        
-        risk_score = 0.0
-        if 20.0 <= temp <= 29.0:
-            risk_score += 35.0
-        elif 15.0 <= temp <= 32.0:
-            risk_score += 20.0
-        else:
-            risk_score += 5.0
+    col_dist, col_btn = st.columns([2.5, 1.2])
+    with col_dist:
+        district_keys = list(INDIAN_AGRI_DISTRICTS.keys())
+        default_d_idx = 0
+        if st.session_state["weather_city_name"] in district_keys:
+            default_d_idx = district_keys.index(st.session_state["weather_city_name"])
             
-        if rh >= 85:
-            risk_score += 35.0
-        elif rh >= 70:
-            risk_score += 20.0
-        else:
-            risk_score += 5.0
-            
-        risk_score += min(leaf_wetness_hours * 5.5, 30.0)
-        risk_score = min(round(risk_score, 1), 100.0)
+        selected_district = st.selectbox(
+            "📍 Select Agricultural District & Crop Cluster:",
+            district_keys,
+            index=default_d_idx
+        )
+        st.session_state["weather_city_name"] = selected_district
         
-        if risk_score > 70:
-            status_color = "#b91c1c"
-            status_text = T["risk_high_text"]
-            advice = T["risk_high_adv"]
-        elif risk_score > 40:
-            status_color = "#b45309"
-            status_text = T["risk_mod_text"]
-            advice = T["risk_mod_adv"]
-        else:
-            status_color = "#15803d"
-            status_text = T["risk_low_text"]
-            advice = T["risk_low_adv"]
+    with col_btn:
+        st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+        refresh_weather = st.button("🔄 Sync Live Satellite Telemetry", type="primary")
 
+    # Fetch live weather data
+    coord = INDIAN_AGRI_DISTRICTS[selected_district]
+    weather_data = fetch_live_weather(coord["lat"], coord["lon"])
+    
+    # Update active risk factor in session state
+    st.session_state["weather_risk_factor"] = weather_data["factor"]
+    
+    # Status Banner
+    if weather_data["is_live"]:
+        st.success(f"🟢 **Connected to Live Open-Meteo Meteorological Feed** for **{selected_district}** (Lat: {coord['lat']}, Lon: {coord['lon']})")
+    else:
+        st.warning(f"⚠️ Using Offline Meteorological Simulation for {selected_district}")
+
+    # Microclimate Metrics Cards
+    st.markdown("##### **Current Atmospheric Readings:**")
+    w1, w2, w3, w4 = st.columns(4)
+    w1.metric("🌡️ Temperature", f"{weather_data['temp']} °C", delta="Optimal Spore Zone" if 18 <= weather_data['temp'] <= 29 else "Sub-optimal")
+    w2.metric("💧 Relative Humidity", f"{weather_data['rh']} %", delta="High Fungal Risk" if weather_data['rh'] >= 80 else "Normal")
+    w3.metric("🌧️ Rain / Dew Probability", f"{weather_data['rain_prob']} %", delta="Foliar Wetness" if weather_data['rain_prob'] >= 50 else "Dry Foliage")
+    w4.metric("💨 Wind Speed", f"{weather_data['wind']} km/h", delta="Spore Dispersal")
+
+    st.markdown("---")
+    
+    # Outbreak Risk Display & Factor Multiplier
+    col_risk_card, col_stock_adv = st.columns([1.1, 1.3], gap="large")
+    
+    risk_score = weather_data["risk_score"]
+    factor_val = weather_data["factor"]
+    
+    if risk_score > 70:
+        status_color = "#b91c1c"
+        status_bg = "#fef2f2"
+        status_text = T["risk_high_text"]
+        advice = T["risk_high_adv"]
+        badge_level = "CRITICAL OUTBREAK WARNING"
+    elif risk_score > 40:
+        status_color = "#b45309"
+        status_bg = "#fffbeb"
+        status_text = T["risk_mod_text"]
+        advice = T["risk_mod_adv"]
+        badge_level = "ELEVATED VIGILANCE REQUIRED"
+    else:
+        status_color = "#15803d"
+        status_bg = "#f0fdf4"
+        status_text = T["risk_low_text"]
+        advice = T["risk_low_adv"]
+        badge_level = "WEATHER CONDITIONS SAFE"
+
+    with col_risk_card:
         st.markdown(f"""
-        <div style='background: #fffdfa; border-radius: 14px; border: 2.5px solid {status_color}; padding: 24px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);'>
-            <div style='font-size: 0.82rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;'>{T["radar_sim_label"]}</div>
-            <div style='font-family: \"Playfair Display\", serif; font-size: 3.0rem; font-weight: 850; color: {status_color}; line-height: 1.1;'>{risk_score}%</div>
-            <div style='font-size: 1.15rem; font-weight: 800; color: {status_color}; margin-top: 4px; margin-bottom: 12px;'>{status_text}</div>
-            <p style='color: #2d3748; font-size: 0.95rem; line-height: 1.55; font-weight: 500;'>{advice}</p>
+        <div style='background: {status_bg}; border-radius: 14px; border: 2.5px solid {status_color}; padding: 24px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <span style='font-size: 0.72rem; color: #475569; font-weight: 800; text-transform: uppercase;'>{T["radar_sim_label"]}</span>
+                <span style='background: {status_color}; color: #ffffff; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px;'>{badge_level}</span>
+            </div>
+            <div style='font-family: "Playfair Display", serif; font-size: 3.2rem; font-weight: 850; color: {status_color}; line-height: 1.1; margin-top: 8px;'>{risk_score}%</div>
+            <div style='font-size: 1.1rem; font-weight: 800; color: {status_color}; margin-top: 4px; margin-bottom: 12px;'>{status_text}</div>
+            <div style='background: #ffffff; border: 1.5px dashed {status_color}; border-radius: 8px; padding: 10px 14px; margin-top: 10px;'>
+                <div style='font-size: 0.76rem; font-weight: 800; color: #475569;'>ACTIVE REVENUE SIMULATOR MULTIPLIER:</div>
+                <div style='font-size: 1.35rem; font-weight: 850; color: {status_color};'>⚡ {factor_val:.2f}× Disease Surge Factor</div>
+                <div style='font-size: 0.72rem; color: #64748b;'>This multiplier is actively coupled to the Revenue & Per-Acre Simulator.</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col_stock_adv:
+        st.markdown(f"""
+        <div style='background: #ffffff; border-radius: 14px; border: 1.5px solid #cbd5e1; padding: 24px; box-shadow: 0 4px 14px rgba(15,23,42,0.04); height: 100%;'>
+            <div style='font-size: 0.80rem; font-weight: 800; color: #854d0e; text-transform: uppercase;'>🏪 KRISHI KENDRA PRE-STOCKING ADVISORY</div>
+            <h3 style='margin: 8px 0 10px 0; color: #0f172a; font-family: "Playfair Display", serif;'>Immediate Procurement Plan</h3>
+            <p style='color: #1e293b; font-size: 0.95rem; line-height: 1.55; margin-bottom: 14px;'>{advice}</p>
+            <div style='border-top: 1px solid #e2e8f0; padding-top: 12px;'>
+                <strong style='font-size: 0.82rem; color: #0f172a;'>Recommended Counter Stocking Checklist:</strong>
+                <ul style='font-size: 0.82rem; color: #334155; margin-top: 6px; padding-left: 20px; line-height: 1.6;'>
+                    <li><strong>Bio-Fungicide:</strong> Copper Hydroxide 53.8% DF (25+ units)</li>
+                    <li><strong>Organic Protectant:</strong> Cold-Pressed Neem Oil 10,000 PPM (40+ bottles)</li>
+                    <li><strong>Soil Inoculant:</strong> Trichoderma viride 1.5% WP (30+ kg)</li>
+                    <li><strong>Foliar Fortifier:</strong> Chelated Zinc & Boron Micronutrient Mix</li>
+                </ul>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
-
-# =========================================================
-# MODE 5: EDGE HARDWARE BENCHMARKS
-# =========================================================
-elif nav_mode_index == 5:
-    st.markdown(f"### **{T['bench_title']}**")
-    st.markdown(f"<p style='color: #475569;'>{T['bench_desc']}</p>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    devices = list(EDGE_BENCHMARKS.keys())
-    latencies = [EDGE_BENCHMARKS[d]["latency_ms"] for d in devices]
-    energies = [EDGE_BENCHMARKS[d]["energy_per_infer_joules"] for d in devices]
-    
-    col_t1, col_t2 = st.columns(2)
-    with col_t1:
-        st.markdown(f"##### **{T['bench_lat_title']}**")
-        st.bar_chart(dict(zip(devices, latencies)))
+    # Technical Edge Hardware Benchmarks in Expander
+    with st.expander(f"⚡ {T['bench_title']}", expanded=False):
+        st.markdown(f"<p style='color: #475569;'>{T['bench_desc']}</p>", unsafe_allow_html=True)
+        devices = list(EDGE_BENCHMARKS.keys())
+        latencies = [EDGE_BENCHMARKS[d]["latency_ms"] for d in devices]
+        energies = [EDGE_BENCHMARKS[d]["energy_per_infer_joules"] for d in devices]
         
-    with col_t2:
-        st.markdown(f"##### **{T['bench_eng_title']}**")
-        st.bar_chart(dict(zip(devices, energies)))
-        
-    st.markdown("---")
-    
-    st.markdown(f"##### **{T['bench_matrix_title']}**")
-    st.dataframe(
-        [
-            {
-                T["col_profile"]: dev,
-                T["col_runtime"]: data["runtime"],
-                T["col_latency"]: data["latency_ms"],
-                T["col_ram"]: data["ram_mb"],
-                T["col_offline"]: T["val_offline_yes"] if data["offline"] else T["val_offline_no"],
-                T["col_energy"]: data["energy_per_infer_joules"]
-            }
-            for dev, data in EDGE_BENCHMARKS.items()
-        ],
-        use_container_width=True
-    )
+        col_t1, col_t2 = st.columns(2)
+        with col_t1:
+            st.markdown(f"##### **{T['bench_lat_title']}**")
+            st.bar_chart(dict(zip(devices, latencies)))
+        with col_t2:
+            st.markdown(f"##### **{T['bench_eng_title']}**")
+            st.bar_chart(dict(zip(devices, energies)))
+            
+        st.markdown(f"##### **{T['bench_matrix_title']}**")
+        st.dataframe(
+            [
+                {
+                    T["col_profile"]: dev,
+                    T["col_runtime"]: data["runtime"],
+                    T["col_latency"]: data["latency_ms"],
+                    T["col_ram"]: data["ram_mb"],
+                    T["col_offline"]: T["val_offline_yes"] if data["offline"] else T["val_offline_no"],
+                    T["col_energy"]: data["energy_per_infer_joules"]
+                }
+                for dev, data in EDGE_BENCHMARKS.items()
+            ],
+            use_container_width=True
+        )
 
 
 # =========================================================
-# MODE 6: DEALER ROI & BUSINESS IMPACT (CRORE SCALE & PER-ACRE)
+# MODE 2: REVENUE & PER-ACRE IMPACT SIMULATOR
 # =========================================================
-elif nav_mode_index == 6:
+elif nav_mode_index == 2:
     st.markdown(f"### **{T['roi_page_title']}**")
     st.markdown(f"<p style='color: #475569;'>{T['roi_page_desc']}</p>", unsafe_allow_html=True)
     
-    tab_acre, tab_net, tab_sdg = st.tabs([
+    # Dynamic Weather Multiplier Control Bar
+    weather_factor = st.session_state.get("weather_risk_factor", 1.25)
+    weather_city = st.session_state.get("weather_city_name", "Regional Weather Station")
+    
+    col_w_bar1, col_w_bar2 = st.columns([3, 1.2])
+    with col_w_bar1:
+        st.session_state["apply_weather_factor"] = st.checkbox(
+            f"⛅ Apply Live Meteorological Outbreak Multiplier ({weather_factor:.2f}× from {weather_city})",
+            value=st.session_state.get("apply_weather_factor", True)
+        )
+    with col_w_bar2:
+        eff_factor = weather_factor if st.session_state["apply_weather_factor"] else 1.00
+        st.markdown(f"<div style='text-align: right; font-weight: 800; color: #0f172a; font-size: 0.95rem;'>Active Multiplier: <span style='color: #15803d; font-size: 1.15rem;'>{eff_factor:.2f}×</span></div>", unsafe_allow_html=True)
+
+    if st.session_state["apply_weather_factor"] and eff_factor > 1.0:
+        st.info(f"🌾 **Live Microclimate Modulation:** High disease pressure ({weather_city}) increases input spray requirements and potential yield losses by **+{int((eff_factor - 1.0)*100)}%**, accurately scaling shop turnover and crop wealth protected.")
+
+    # 3 Consolidated Sub-Tabs Max
+    tab_acre, tab_net, tab_plans = st.tabs([
         T["roi_tab_acre"],
         T["roi_tab_network"],
-        T["roi_tab_sdg"]
+        "💎 3. Monetization Tiers & Regional SDG Impact"
     ])
     
     # ------------------ TAB 1: PER-ACRE FIELD ECONOMICS ------------------
@@ -1300,11 +1301,15 @@ elif nav_mode_index == 6:
         with f_col1:
             farmer_holding = st.slider(T["acre_holding_label"], min_value=1.0, max_value=40.0, value=4.0, step=0.5)
         with f_col2:
-            sprays_per_acre = st.slider(T["acre_sprays_label"], min_value=2, max_value=12, value=c_data["typical_sprays"], step=1)
+            base_sprays = c_data["typical_sprays"]
+            mod_sprays = min(12, max(2, round(base_sprays * eff_factor)))
+            sprays_per_acre = st.slider(T["acre_sprays_label"], min_value=2, max_value=12, value=mod_sprays, step=1)
         with f_col3:
             cost_per_spray = st.slider(T["acre_spray_cost_label"], min_value=300, max_value=2500, value=c_data["default_cost_per_spray"], step=50)
 
-        loss_prevent_pct = st.slider(T["acre_loss_prevent_label"], min_value=10.0, max_value=50.0, value=c_data["default_loss_prevented_pct"], step=1.0)
+        base_loss_prev = c_data["default_loss_prevented_pct"]
+        mod_loss_prev = min(50.0, base_loss_prev * (eff_factor ** 0.5))
+        loss_prevent_pct = st.slider(T["acre_loss_prevent_label"], min_value=10.0, max_value=50.0, value=round(mod_loss_prev, 1), step=1.0)
         
         # Per-Acre Formulas
         per_acre_input_cost = sprays_per_acre * cost_per_spray
@@ -1396,9 +1401,9 @@ elif nav_mode_index == 6:
             dealer_margin_net = st.slider(T["net_margin_slider"], min_value=10, max_value=45, value=def_margin, step=1)
             
         active_diagnosed_farmers = farmers_count * (ai_adoption / 100.0)
-        annual_network_turnover = active_diagnosed_farmers * annual_spend
+        annual_network_turnover = active_diagnosed_farmers * annual_spend * eff_factor
         annual_gross_dealer_profit = annual_network_turnover * (dealer_margin_net / 100.0)
-        regional_crop_wealth_protected = active_diagnosed_farmers * 78000
+        regional_crop_wealth_protected = active_diagnosed_farmers * 78000 * eff_factor
         
         plan_id = st.session_state["current_tier"]
         annual_saas_cost = MONETIZATION_TIERS[plan_id]["price_inr"] * 12
@@ -1434,13 +1439,95 @@ elif nav_mode_index == 6:
         </div>
         """, unsafe_allow_html=True)
 
-    # ------------------ TAB 3: REGIONAL SDG & ENVIRONMENTAL IMPACT ------------------
-    with tab_sdg:
-        st.markdown(f"#### **{T['roi_tab_sdg']}**")
-        st.caption("Quantifiable environmental and food system impact metrics measured under UN Sustainable Development Goals.")
+    # ------------------ TAB 3: MONETIZATION TIERS & REGIONAL SDG IMPACT ------------------
+    with tab_plans:
+        st.markdown(f"#### **{T['tier_section_title']}**")
+        st.caption(T['tier_section_sub'])
         
-        food_tonnes_saved = round((3500 * (15.0 * 0.28)), 1)
-        toxic_runoff_averted_kg = round(3500 * 2.8, 1)
+        tier_col1, tier_col2, tier_col3 = st.columns(3)
+        
+        # Tier 1: Starter
+        with tier_col1:
+            t1 = MONETIZATION_TIERS["starter"]
+            is_cur1 = (st.session_state["current_tier"] == "starter")
+            border1 = "3px solid #0f172a" if is_cur1 else "1.5px solid #cbd5e1"
+            st.markdown(f"""
+            <div style="background: #ffffff; border: {border1}; border-radius: 14px; padding: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 440px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <span style="background: #f1f5f9; color: #334155; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t1['badge']}</span>
+                    <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t1['name']}</h3>
+                    <div style="font-size: 1.8rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 0 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ forever</span></div>
+                    <p style="font-size: 0.82rem; color: #334155; line-height: 1.45;">{t1['description']}</p>
+                    <div style="border-top: 1px solid #e2e8f0; margin: 12px 0; padding-top: 10px;">
+                        <strong style="font-size: 0.80rem; color: #0f172a;">{T['included_features']}</strong>
+                        <ul style="font-size: 0.78rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.5;">
+                            {''.join(['<li>' + f + '</li>' for f in t1['features']])}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Select Starter Plan", key="btn_tier_starter_sub", disabled=is_cur1):
+                st.session_state["current_tier"] = "starter"
+                st.rerun()
+
+        # Tier 2: Pro
+        with tier_col2:
+            t2 = MONETIZATION_TIERS["pro"]
+            is_cur2 = (st.session_state["current_tier"] == "pro")
+            border2 = "3px solid #15803d" if is_cur2 else "2px solid #15803d"
+            st.markdown(f"""
+            <div style="background: #ffffff; border: {border2}; border-radius: 14px; padding: 22px; box-shadow: 0 8px 24px rgba(21,128,61,0.12); min-height: 440px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div style="position: absolute; top: -11px; right: 20px; background: #d97706; color: #ffffff; font-size: 0.68rem; font-weight: 850; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.8px;">★ ARTISAN DEALER CHOICE ★</div>
+                <div>
+                    <span style="background: #15803d; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t2['badge']}</span>
+                    <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t2['name']}</h3>
+                    <div style="font-size: 1.8rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 499 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
+                    <p style="font-size: 0.82rem; color: #334155; line-height: 1.45;">{t2['description']}</p>
+                    <div style="border-top: 1px solid #e2e8f0; margin: 12px 0; padding-top: 10px;">
+                        <strong style="font-size: 0.80rem; color: #0f172a;">{T['included_features']}</strong>
+                        <ul style="font-size: 0.78rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.5;">
+                            {''.join(['<li>✅ ' + f + '</li>' for f in t2['features']])}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Select Pro Dealer Plan", key="btn_tier_pro_sub", type="primary" if not is_cur2 else "secondary", disabled=is_cur2):
+                st.session_state["current_tier"] = "pro"
+                st.rerun()
+
+        # Tier 3: Enterprise
+        with tier_col3:
+            t3 = MONETIZATION_TIERS["enterprise"]
+            is_cur3 = (st.session_state["current_tier"] == "enterprise")
+            border3 = "3px solid #7c3aed" if is_cur3 else "1.5px solid #cbd5e1"
+            st.markdown(f"""
+            <div style="background: #ffffff; border: {border3}; border-radius: 14px; padding: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.05); min-height: 440px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <span style="background: #f5f3ff; color: #6d28d9; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 0.5px;">{t3['badge']}</span>
+                    <h3 style="margin: 10px 0 2px 0; color: #0f172a; font-family: 'Playfair Display', serif;">{t3['name']}</h3>
+                    <div style="font-size: 1.8rem; font-weight: 850; color: #0f172a; margin: 8px 0;">₹ 1,999 <span style="font-size: 0.85rem; color: #475569; font-weight: 500;">/ month</span></div>
+                    <p style="font-size: 0.82rem; color: #334155; line-height: 1.45;">{t3['description']}</p>
+                    <div style="border-top: 1px solid #e2e8f0; margin: 12px 0; padding-top: 10px;">
+                        <strong style="font-size: 0.80rem; color: #0f172a;">{T['included_features']}</strong>
+                        <ul style="font-size: 0.78rem; color: #1e293b; padding-left: 18px; margin-top: 6px; line-height: 1.5;">
+                            {''.join(['<li>🚀 ' + f + '</li>' for f in t3['features']])}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Select Enterprise Plan", key="btn_tier_ent_sub", disabled=is_cur3):
+                st.session_state["current_tier"] = "enterprise"
+                st.rerun()
+
+        st.markdown("---")
+        
+        # UN SDG 2 and SDG 15 Impact Metrics
+        st.markdown("#### **Regional Food Security & UN SDG Impact (Command Cluster):**")
+        food_tonnes_saved = round((3500 * (15.0 * 0.28) * eff_factor), 1)
+        toxic_runoff_averted_kg = round(3500 * 2.8 * eff_factor, 1)
         
         col_s1, col_s2 = st.columns(2)
         with col_s1:
