@@ -15,10 +15,19 @@ if CURRENT_DIR not in sys.path:
 import io
 import time
 import urllib.parse
+import importlib
 import numpy as np
 import cv2
 from PIL import Image
 import streamlit as st
+
+# Force hot-reload of local modules on Streamlit Cloud to prevent stale in-memory caching
+import knowledge_base
+import engine
+import translations
+importlib.reload(knowledge_base)
+importlib.reload(engine)
+importlib.reload(translations)
 
 from knowledge_base import DISEASE_DATABASE, EDGE_BENCHMARKS, MONETIZATION_TIERS
 from engine import (
@@ -27,6 +36,25 @@ from engine import (
     preprocess_leaf_image
 )
 from translations import UI_TRANSLATIONS
+
+
+class SafeTranslationDict(dict):
+    """Dictionary that never raises KeyError, falling back safely to English or key title."""
+    def __getitem__(self, key):
+        if key in self:
+            return super().__getitem__(key)
+        en_table = UI_TRANSLATIONS.get("en", {})
+        if key in en_table:
+            return en_table[key]
+        return key.replace("_", " ").title()
+        
+    def get(self, key, default=None):
+        if key in self:
+            return super().get(key, default)
+        en_table = UI_TRANSLATIONS.get("en", {})
+        if key in en_table:
+            return en_table.get(key, default)
+        return default if default is not None else key.replace("_", " ").title()
 
 # ---------------------------------------------------------
 # Page Configuration & Artisanal Botanical Atelier Styling
@@ -467,8 +495,9 @@ with st.sidebar:
         key="language"
     )
     
-    # Active language translation dictionary
-    T = UI_TRANSLATIONS.get(st.session_state["language"], UI_TRANSLATIONS["en"])
+    # Active language translation dictionary (wrapped defensively against KeyErrors)
+    raw_t = UI_TRANSLATIONS.get(st.session_state["language"], UI_TRANSLATIONS.get("en", {}))
+    T = SafeTranslationDict(raw_t)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
