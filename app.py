@@ -394,28 +394,34 @@ with st.sidebar:
         "te": "🌱 తెలుగు (Telugu)"
     }
     
-    selected_lang = st.selectbox(
+    # key="language" binds directly to session_state — no manual assignment needed,
+    # avoids the double-rerun caused by writing to session_state after widget return.
+    st.selectbox(
         "🗣️ Shopkeeper / Counter Language",
         options=list(lang_display_names.keys()),
         format_func=lambda x: lang_display_names[x],
-        index=list(lang_display_names.keys()).index(st.session_state["language"])
+        key="language"
     )
-    st.session_state["language"] = selected_lang
     
     # Active language translation dictionary
-    T = UI_TRANSLATIONS.get(selected_lang, UI_TRANSLATIONS["en"])
+    T = UI_TRANSLATIONS.get(st.session_state["language"], UI_TRANSLATIONS["en"])
     
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Navigation Modes
+    # Radio bound via key to avoid manual session_state write triggering extra rerun.
+    # We store nav_index as int; on language change, clamp to valid range.
     current_modes = T["nav_modes"]
+    safe_nav_index = min(st.session_state["nav_index"], len(current_modes) - 1)
     selected_mode_text = st.radio(
         T["nav_label"],
         current_modes,
-        index=st.session_state["nav_index"]
+        index=safe_nav_index
     )
     nav_mode_index = current_modes.index(selected_mode_text)
-    st.session_state["nav_index"] = nav_mode_index
+    # Only write back if the index actually changed — avoids spurious state diffs
+    if nav_mode_index != st.session_state["nav_index"]:
+        st.session_state["nav_index"] = nav_mode_index
     
     st.markdown("---")
     
